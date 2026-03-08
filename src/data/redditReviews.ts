@@ -20,7 +20,7 @@ export const redditReviewsByShop: Record<string, RedditReview[]> = {
       threadUrl: "https://www.reddit.com/r/JamesHoffmann/comments/1ghibg0/prufrock_today/",
     },
   ],
-  "workshop-marylebone": [
+  "workshop-fitzrovia": [
     {
       subreddit: "r/Coffee",
       author: "n8redd",

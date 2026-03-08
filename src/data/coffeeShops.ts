@@ -1,3 +1,5 @@
+export { coffeeShops } from "./shops";
+
 /** Chains that are excluded from "Independent Verified" status */
 const EXCLUDED_CHAINS = [
   "costa", "caffe nero", "nero", "starbucks", "gails", "gail's",
