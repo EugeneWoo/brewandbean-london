@@ -1,1 +1,4 @@
 project_id = "bomixqudvcfqanqzekll"
+
+[functions.fetch-nearby-shops]
+verify_jwt = false
