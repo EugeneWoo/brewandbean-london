@@ -67,7 +67,7 @@ export function ShopPreviewCard({ shop, hasRedditBuzz }: ShopPreviewCardProps) {
         <Button
           size="sm"
           className="w-full mt-1"
-          onClick={() => navigate(`/shop/${shop.id}`)}
+          onClick={() => navigate(`/shop/${shop.id}`, { state: { shop } })}
         >
           View Details
         </Button>

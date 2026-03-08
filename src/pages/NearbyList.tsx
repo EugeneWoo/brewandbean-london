@@ -100,7 +100,7 @@ const NearbyList = () => {
               shop={shop}
               rank={idx + 1}
               distanceKm={distance}
-              onClick={() => navigate(`/shop/${shop.id}`)}
+              onClick={() => navigate(`/shop/${shop.id}`, { state: { shop } })}
             />
           ))}
         </div>

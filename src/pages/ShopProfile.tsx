@@ -1,5 +1,6 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { coffeeShops } from "@/data/coffeeShops";
+import type { CoffeeShop } from "@/data/coffeeShops";
 import { redditReviewsByShop, redditSentimentByShop } from "@/data/redditReviews";
 import { AppHeader } from "@/components/AppHeader";
 import { Button } from "@/components/ui/button";
@@ -16,8 +17,12 @@ import { ShopTransport } from "@/components/shop/ShopTransport";
 export default function ShopProfile() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const shop = coffeeShops.find((s) => s.id === id);
+  // Try hardcoded list first, then fall back to shop data passed via router state (for Google Places results)
+  const shop: CoffeeShop | undefined =
+    coffeeShops.find((s) => s.id === id) ||
+    (location.state as { shop?: CoffeeShop })?.shop;
   const redditReviews = id ? redditReviewsByShop[id] || [] : [];
   const redditSentiment = id ? redditSentimentByShop[id] : undefined;
 
