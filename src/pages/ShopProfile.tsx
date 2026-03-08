@@ -47,6 +47,7 @@ export default function ShopProfile() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [showAllHours, setShowAllHours] = useState(false);
+  const redditReviews = id ? redditReviewsByShop[id] || [] : [];
 
   const shop = coffeeShops.find((s) => s.id === id);
 
