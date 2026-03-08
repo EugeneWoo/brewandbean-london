@@ -26,6 +26,9 @@ import {
   Navigation,
   ChevronDown,
   ChevronUp,
+  MessageSquare,
+  ArrowUpRight,
+  ThumbsUp,
 } from "lucide-react";
 import { useState } from "react";
 
