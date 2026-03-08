@@ -55,6 +55,17 @@ function createPinIcon(active: boolean, rating: number, hasBuzz: boolean) {
   });
 }
 
+/** Re-center map when user location changes (MapContainer center is immutable) */
+function MapRecenter({ userLocation }: { userLocation: UserLocation | null }) {
+  const map = useMap();
+  useEffect(() => {
+    if (userLocation) {
+      map.setView([userLocation.lat, userLocation.lng], Math.max(map.getZoom(), 14), { animate: true });
+    }
+  }, [userLocation?.lat, userLocation?.lng]);
+  return null;
+}
+
 /** Fit map to show user location + nearby shops */
 function MapAutoFit({ center, shops }: { center: [number, number]; shops: CoffeeShop[] }) {
   const map = useMap();
