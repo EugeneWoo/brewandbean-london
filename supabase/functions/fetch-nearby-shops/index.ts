@@ -32,7 +32,25 @@ function isLikelyCoffeeShop(name: string): boolean {
 }
 
 // Encode photo ref as base64url so the proxy endpoint can decode it
-function encodePhotoRef(photoName: string): string {
+function inferOpensEarly(place: any): boolean {
+  const periods = place.currentOpeningHours?.periods;
+  if (!periods?.length) return false;
+  return periods.some((p: any) => {
+    const hour = p.open?.hour ?? 99;
+    return hour <= 7;
+  });
+}
+
+function inferOpensLate(place: any): boolean {
+  const periods = place.currentOpeningHours?.periods;
+  if (!periods?.length) return false;
+  return periods.some((p: any) => {
+    const hour = p.close?.hour ?? 0;
+    return hour >= 21 || hour === 0; // closes at 9pm+ or midnight
+  });
+}
+
+
   // Use btoa-safe encoding
   return btoa(photoName).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
