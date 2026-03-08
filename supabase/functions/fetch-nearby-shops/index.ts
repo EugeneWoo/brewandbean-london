@@ -115,7 +115,7 @@ Deno.serve(async (req) => {
       headers: {
         "Content-Type": "application/json",
         "X-Goog-Api-Key": apiKey,
-        "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.location,places.rating,places.userRatingCount,places.photos,places.currentOpeningHours,places.priceLevel,places.types",
+        "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.location,places.rating,places.userRatingCount,places.photos,places.currentOpeningHours,places.priceLevel,places.types,places.dineIn,places.takeout,places.outdoorSeating,places.allowsDogs,places.goodForChildren,places.servesBreakfast,places.servesCoffee",
       },
       body: JSON.stringify({
         includedTypes: ["cafe", "coffee_shop"],
