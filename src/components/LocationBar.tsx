@@ -36,6 +36,7 @@ interface LocationBarProps {
 export function LocationBar({ locationState }: LocationBarProps) {
   const { nearestNeighborhood, nearbyCount, status, setManualLocation, retry } =
     locationState;
+  const areaPresets = useMemo(() => deriveAreaPresets(), []);
 
   return (
     <div className="absolute top-3 left-3 z-[1000] flex items-center gap-2">
