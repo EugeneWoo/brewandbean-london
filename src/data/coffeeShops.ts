@@ -59,6 +59,7 @@ export interface CoffeeShop {
   sentimentTags: string[];
   nearestTransport: string[];
   verification: VerificationInfo;
+  redditReviews: RedditReview[];
 }
 
 /**
