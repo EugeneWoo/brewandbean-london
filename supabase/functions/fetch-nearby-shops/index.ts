@@ -15,6 +15,11 @@ const EXCLUDED_NAMES = [
   "turkish tea", "shisha", "hookah",
   "asian dessert", "dessert bar", "ice cream",
   "juice bar", "smoothie", "açaí",
+  // National chains
+  "costa coffee", "costa", "caffe nero", "caffè nero", "nero",
+  "starbucks", "pret a manger", "pret ", "greggs",
+  "gail's", "gails", "blank street", "black sheep",
+  "coffee republic", "wild bean cafe",
 ];
 
 function gridKey(lat: number, lng: number): string {
