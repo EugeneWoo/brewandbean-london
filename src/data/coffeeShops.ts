@@ -233,6 +233,7 @@ export const coffeeShops: CoffeeShop[] = [
     communityReview: "Broadway Market's original specialty coffee pioneers, Climpson & Sons helped put Hackney on the coffee map over a decade ago. Their single-origin filter coffee is consistently outstanding, and Saturday mornings during the market are a vibrant community experience. Google reviewers love the relaxed atmosphere and the way staff remember regulars' orders. The outdoor seating is prime people-watching territory.",
     sentimentTags: ["Broadway Market icon", "Community hub", "Outdoor seating", "Single-origin filter"],
     nearestTransport: ["London Fields (5 min)", "Haggerston (8 min)"],
+    verification: { totalLocations: 1, googleRating: 4.4, hasFullInfo: true },
   },
   {
     id: "origin-shoreditch",
