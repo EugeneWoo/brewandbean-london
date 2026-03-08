@@ -73,9 +73,10 @@ export function useUserLocation(): LocationState {
 
     setStatus("loading");
 
-    // Use watchPosition for live updates (especially on mobile)
-    watchIdRef.current = navigator.geolocation.watchPosition(
+    // First try a quick low-accuracy position, then upgrade to watch
+    navigator.geolocation.getCurrentPosition(
       (pos) => {
+        console.log("[Location] Quick fix:", pos.coords.latitude, pos.coords.longitude);
         setLocation({
           lat: pos.coords.latitude,
           lng: pos.coords.longitude,
@@ -85,6 +86,25 @@ export function useUserLocation(): LocationState {
         setError(null);
       },
       (err) => {
+        console.log("[Location] Quick fix failed:", err.code, err.message);
+      },
+      { enableHighAccuracy: false, timeout: 5000, maximumAge: 300000 }
+    );
+
+    // Then use watchPosition for live high-accuracy updates
+    watchIdRef.current = navigator.geolocation.watchPosition(
+      (pos) => {
+        console.log("[Location] Watch update:", pos.coords.latitude, pos.coords.longitude, "accuracy:", pos.coords.accuracy);
+        setLocation({
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+          source: "geolocation",
+        });
+        setStatus("granted");
+        setError(null);
+      },
+      (err) => {
+        console.log("[Location] Watch error:", err.code, err.message);
         setStatus("denied");
         setError(
           err.code === 1
@@ -92,7 +112,7 @@ export function useUserLocation(): LocationState {
             : "Could not determine location"
         );
       },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 60000 }
     );
   }, []);
 
