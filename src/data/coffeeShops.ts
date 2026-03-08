@@ -161,6 +161,7 @@ export const coffeeShops: CoffeeShop[] = [
     communityReview: "Workshop's Fitzrovia outpost is a masterclass in minimalist café design. The focus here is squarely on the coffee—direct trade beans roasted at their Bethnal Green facility with meticulous care. Reviewers on Google praise the consistently excellent espresso and the calm, focused atmosphere perfect for work. The pastry selection from local bakeries is a lovely complement.",
     sentimentTags: ["Minimalist design", "Direct trade", "Great for work", "Exceptional pastries"],
     nearestTransport: ["Goodge Street (2 min)", "Oxford Circus (5 min)"],
+    verification: { totalLocations: 5, googleRating: 4.3, hasFullInfo: true },
   },
   {
     id: "rosslyn-city",
