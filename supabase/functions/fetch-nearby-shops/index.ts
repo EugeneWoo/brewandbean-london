@@ -174,14 +174,14 @@ Deno.serve(async (req) => {
           isOpen: place.currentOpeningHours?.openNow ?? false,
           hours: {},
           attributes: {
-            kidsFriendly: false,
-            laptopFriendly: false,
-            sitIn: true,
-            foodMenu: false,
-            opensEarly: false,
-            opensLate: false,
-            specialtyCoffee: false,
-            dogFriendly: false,
+            kidsFriendly: place.goodForChildren === true,
+            laptopFriendly: false, // not available from Google
+            sitIn: place.dineIn === true || place.outdoorSeating === true,
+            foodMenu: place.servesBreakfast === true,
+            opensEarly: inferOpensEarly(place),
+            opensLate: inferOpensLate(place),
+            specialtyCoffee: false, // not available from Google
+            dogFriendly: place.allowsDogs === true,
           },
           communityReview: "",
           sentimentTags: [],
