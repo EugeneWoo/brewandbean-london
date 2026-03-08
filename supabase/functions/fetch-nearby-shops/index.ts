@@ -22,6 +22,8 @@ const EXCLUDED_NAMES = [
   "coffee republic", "wild bean cafe",
   // Non-specialty breakfast/restaurant spots
   "grubberie", "luis' cafe", "luis cafe",
+  // Non-coffee-shop venues Google mis-tags
+  "amnesty international", "kiosk",
 ];
 
 function gridKey(lat: number, lng: number): string {
