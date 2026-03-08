@@ -98,6 +98,11 @@ export function useUserLocation(): LocationState {
 
   useEffect(() => {
     requestGeolocation();
+    return () => {
+      if (watchIdRef.current !== null) {
+        navigator.geolocation.clearWatch(watchIdRef.current);
+      }
+    };
   }, [requestGeolocation]);
 
   const setManualLocation = useCallback((lat: number, lng: number) => {
