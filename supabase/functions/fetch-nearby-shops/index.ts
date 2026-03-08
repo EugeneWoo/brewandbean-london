@@ -169,7 +169,7 @@ Deno.serve(async (req) => {
 
     if (data.error) {
       console.error("Places API error:", data.error.status, data.error.message);
-      return new Response(JSON.stringify({ error: `Places API: ${data.error.status}`, detail: data.error.message }), {
+      return new Response(JSON.stringify({ error: "Upstream API unavailable" }), {
         status: 502,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
