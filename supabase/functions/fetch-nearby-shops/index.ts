@@ -167,7 +167,7 @@ Deno.serve(async (req) => {
 
     const shops = (data.places || [])
       .filter((place: any) => {
-        if (!isLikelyCoffeeShop(place.displayName?.text || "")) return false;
+        if (!isLikelyCoffeeShop(place.displayName?.text || "", place.types || [])) return false;
         // Require minimum 4.5 rating
         if ((place.rating || 0) < 4.5) return false;
         return true;
