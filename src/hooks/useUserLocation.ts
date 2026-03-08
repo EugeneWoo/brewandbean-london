@@ -57,6 +57,8 @@ export function useUserLocation(): LocationState {
   const [status, setStatus] = useState<LocationState["status"]>("loading");
   const [error, setError] = useState<string | null>(null);
 
+  const watchIdRef = useRef<number | null>(null);
+
   const requestGeolocation = useCallback(() => {
     if (!navigator.geolocation) {
       setStatus("denied");
@@ -64,8 +66,15 @@ export function useUserLocation(): LocationState {
       return;
     }
 
+    // Clear any existing watch
+    if (watchIdRef.current !== null) {
+      navigator.geolocation.clearWatch(watchIdRef.current);
+    }
+
     setStatus("loading");
-    navigator.geolocation.getCurrentPosition(
+
+    // Use watchPosition for live updates (especially on mobile)
+    watchIdRef.current = navigator.geolocation.watchPosition(
       (pos) => {
         setLocation({
           lat: pos.coords.latitude,
@@ -83,7 +92,7 @@ export function useUserLocation(): LocationState {
             : "Could not determine location"
         );
       },
-      { enableHighAccuracy: false, timeout: 8000, maximumAge: 300000 }
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
     );
   }, []);
 
