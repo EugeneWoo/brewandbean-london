@@ -21,20 +21,29 @@ const EXCLUDED_NAMES = [
   "gail's", "gails", "blank street", "black sheep",
   "coffee republic", "wild bean cafe",
   // Non-specialty breakfast/restaurant spots
-  "grubberie", "luis' cafe", "luis cafe", "luis\u2019 cafe", "luis\u2019s cafe",
+  "grubberie", "luis' cafe", "luis cafe",
 ];
 
 function gridKey(lat: number, lng: number): string {
   return `${(lat * 200).toFixed(0)},${(lng * 200).toFixed(0)}`;
 }
 
+/** Strip diacritics and normalize quotes for matching */
+function normalize(s: string): string {
+  return s
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // remove accent marks
+    .replace(/[\u2018\u2019\u2032\u0060]/g, "'"); // normalize quotes
+}
+
 function isLikelyCoffeeShop(name: string, types: string[] = []): boolean {
-  const lower = name.toLowerCase();
-  if (EXCLUDED_NAMES.some((ex) => lower.includes(ex))) return false;
+  const norm = normalize(name);
+  if (EXCLUDED_NAMES.some((ex) => norm.includes(ex))) return false;
 
   // Exclude places typed as "restaurant" — they're eateries, not indie coffee
   // Exception: keep if name mentions "brunch"
-  if (types.includes("restaurant") && !lower.includes("brunch")) return false;
+  if (types.includes("restaurant") && !norm.includes("brunch")) return false;
 
   return true;
 }
