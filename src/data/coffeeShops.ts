@@ -88,6 +88,7 @@ export const coffeeShops: CoffeeShop[] = [
     communityReview: "A Borough Market institution. Locals and coffee pilgrims alike queue patiently for what many consider London's finest flat white. The beans are roasted in-house and the single-origin filter options rotate seasonally. Reddit users frequently mention the communal wooden tables as a unique touch, though laptop use is discouraged. Expect a queue on weekends—regulars say it's absolutely worth the wait.",
     sentimentTags: ["Exceptional espresso", "Worth the queue", "Communal seating", "Single-origin gems"],
     nearestTransport: ["London Bridge (2 min)", "Borough (5 min)"],
+    verification: { totalLocations: 3, googleRating: 4.5, hasFullInfo: true },
   },
   {
     id: "prufrock-leather-lane",
