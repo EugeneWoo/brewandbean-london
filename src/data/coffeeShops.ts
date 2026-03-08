@@ -1,3 +1,19 @@
+/** Chains that are excluded from "Independent Verified" status */
+const EXCLUDED_CHAINS = [
+  "costa", "caffe nero", "nero", "starbucks", "gails", "gail's",
+  "blank street", "black sheep", "pret", "pret a manger", "greggs",
+  "caffè nero", "coffee republic", "wild bean cafe",
+];
+
+export interface VerificationInfo {
+  /** Total number of locations this brand operates */
+  totalLocations: number;
+  /** Average Google Places star rating (1–5) */
+  googleRating: number;
+  /** Whether sufficient attribute info is available (hours, wifi, food, pet/kids/laptop) */
+  hasFullInfo: boolean;
+}
+
 export interface CoffeeShop {
   id: string;
   name: string;
@@ -27,6 +43,26 @@ export interface CoffeeShop {
   communityReview: string;
   sentimentTags: string[];
   nearestTransport: string[];
+  verification: VerificationInfo;
+}
+
+/**
+ * Determines whether a shop qualifies as "Independent Verified":
+ * 1. Not a national chain
+ * 2. Has ≤ 5 locations
+ * 3. Google Places rating ≥ 4.0
+ * 4. Sufficient info about the location
+ */
+export function isIndependentVerified(shop: CoffeeShop): boolean {
+  const nameLower = shop.name.toLowerCase();
+  const isChain = EXCLUDED_CHAINS.some(
+    (chain) => nameLower.includes(chain)
+  );
+  if (isChain) return false;
+  if (shop.verification.totalLocations > 5) return false;
+  if (shop.verification.googleRating < 4.0) return false;
+  if (!shop.verification.hasFullInfo) return false;
+  return true;
 }
 
 export const coffeeShops: CoffeeShop[] = [
