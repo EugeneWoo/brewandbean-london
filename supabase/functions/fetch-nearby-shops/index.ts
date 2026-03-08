@@ -40,68 +40,81 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Google Places Nearby Search
-    const url = new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json");
-    url.searchParams.set("location", `${lat},${lng}`);
-    url.searchParams.set("radius", String(radius));
-    url.searchParams.set("type", "cafe");
-    url.searchParams.set("keyword", "coffee");
-    url.searchParams.set("key", apiKey);
+    // Google Places Nearby Search (New API)
+    const res = await fetch("https://places.googleapis.com/v1/places:searchNearby", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Goog-Api-Key": apiKey,
+        "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.location,places.rating,places.userRatingCount,places.photos,places.currentOpeningHours,places.priceLevel",
+      },
+      body: JSON.stringify({
+        includedTypes: ["cafe", "coffee_shop"],
+        maxResultCount: 20,
+        locationRestriction: {
+          circle: {
+            center: { latitude: lat, longitude: lng },
+            radius: Number(radius),
+          },
+        },
+      }),
+    });
 
-    const res = await fetch(url.toString());
     const data = await res.json();
 
-    if (data.status !== "OK" && data.status !== "ZERO_RESULTS") {
-      console.error("Places API error:", data.status, data.error_message);
-      return new Response(JSON.stringify({ error: `Places API: ${data.status}`, detail: data.error_message }), {
+    if (data.error) {
+      console.error("Places API error:", data.error.status, data.error.message);
+      return new Response(JSON.stringify({ error: `Places API: ${data.error.status}`, detail: data.error.message }), {
         status: 502,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const shops = (data.results || []).map((place: any) => ({
-      id: `gp-${place.place_id}`,
-      name: place.name,
-      address: place.vicinity || "",
-      neighborhood: "",
-      lat: place.geometry.location.lat,
-      lng: place.geometry.location.lng,
-      image: place.photos?.[0]
-        ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&photo_reference=${place.photos[0].photo_reference}&key=${apiKey}`
-        : "",
-      photos: (place.photos || []).slice(0, 3).map(
-        (p: any) =>
-          `https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&photo_reference=${p.photo_reference}&key=${apiKey}`
-      ),
-      roaster: "",
-      phone: "",
-      website: "",
-      instagram: "",
-      isOpen: place.opening_hours?.open_now ?? false,
-      hours: {},
-      attributes: {
-        kidsFriendly: false,
-        laptopFriendly: false,
-        sitIn: true,
-        foodMenu: false,
-        opensEarly: false,
-        opensLate: false,
-        specialtyCoffee: false,
-        dogFriendly: false,
-      },
-      communityReview: "",
-      sentimentTags: [],
-      nearestTransport: [],
-      verification: {
-        totalLocations: 1,
-        googleRating: place.rating || 0,
-        hasFullInfo: false,
-      },
-      placeId: place.place_id,
-      totalRatings: place.user_ratings_total || 0,
-      priceLevel: place.price_level,
-      source: "google_places" as const,
-    }));
+    const shops = (data.places || []).map((place: any) => {
+      const photoUri = place.photos?.[0]?.name
+        ? `https://places.googleapis.com/v1/${place.photos[0].name}/media?maxWidthPx=600&key=${apiKey}`
+        : "";
+      return {
+        id: `gp-${place.id}`,
+        name: place.displayName?.text || "",
+        address: place.formattedAddress || "",
+        neighborhood: "",
+        lat: place.location?.latitude || 0,
+        lng: place.location?.longitude || 0,
+        image: photoUri,
+        photos: (place.photos || []).slice(0, 3).map(
+          (p: any) => `https://places.googleapis.com/v1/${p.name}/media?maxWidthPx=600&key=${apiKey}`
+        ),
+        roaster: "",
+        phone: "",
+        website: "",
+        instagram: "",
+        isOpen: place.currentOpeningHours?.openNow ?? false,
+        hours: {},
+        attributes: {
+          kidsFriendly: false,
+          laptopFriendly: false,
+          sitIn: true,
+          foodMenu: false,
+          opensEarly: false,
+          opensLate: false,
+          specialtyCoffee: false,
+          dogFriendly: false,
+        },
+        communityReview: "",
+        sentimentTags: [],
+        nearestTransport: [],
+        verification: {
+          totalLocations: 1,
+          googleRating: place.rating || 0,
+          hasFullInfo: false,
+        },
+        placeId: place.id,
+        totalRatings: place.userRatingCount || 0,
+        priceLevel: place.priceLevel,
+        source: "google_places" as const,
+      };
+    });
 
     cache.set(key, { data: shops, ts: Date.now() });
 
