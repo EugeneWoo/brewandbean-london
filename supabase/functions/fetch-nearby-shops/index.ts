@@ -26,9 +26,15 @@ function gridKey(lat: number, lng: number): string {
   return `${(lat * 200).toFixed(0)},${(lng * 200).toFixed(0)}`;
 }
 
-function isLikelyCoffeeShop(name: string): boolean {
+function isLikelyCoffeeShop(name: string, types: string[] = []): boolean {
   const lower = name.toLowerCase();
-  return !EXCLUDED_NAMES.some((ex) => lower.includes(ex));
+  if (EXCLUDED_NAMES.some((ex) => lower.includes(ex))) return false;
+
+  // Exclude places typed as "restaurant" — they're eateries, not indie coffee
+  // Exception: keep if name mentions "brunch"
+  if (types.includes("restaurant") && !lower.includes("brunch")) return false;
+
+  return true;
 }
 
 // Encode photo ref as base64url so the proxy endpoint can decode it
