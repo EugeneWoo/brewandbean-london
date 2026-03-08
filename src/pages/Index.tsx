@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { isIndependentVerified } from "@/data/coffeeShops";
 import { CoffeeMap } from "@/components/CoffeeMap";
 import { FilterBar } from "@/components/FilterBar";
 import { LocationBar } from "@/components/LocationBar";
@@ -13,19 +14,25 @@ const Index = () => {
   const locationState = useUserLocation();
   const { shops: nearbyShops, loading: nearbyLoading } = useNearbyShops(locationState.location);
 
-  // Merge hardcoded shops with Google Places results, deduplicating by name similarity
+  // Merge hardcoded + API shops, filtering to verified 4.5+ only
   const allShops = useMemo(() => {
-    if (nearbyShops.length === 0) return coffeeShops;
-
-    const hardcodedNames = new Set(
-      coffeeShops.map((s) => s.name.toLowerCase().trim())
+    // Filter hardcoded: must be verified and rating >= 4.5
+    const qualityHardcoded = coffeeShops.filter(
+      (s) => isIndependentVerified(s) && s.verification.googleRating >= 4.5
     );
 
+    if (nearbyShops.length === 0) return qualityHardcoded;
+
+    const hardcodedNames = new Set(
+      qualityHardcoded.map((s) => s.name.toLowerCase().trim())
+    );
+
+    // API shops already filtered to 4.5+ in edge function
     const newShops = nearbyShops.filter(
       (s) => !hardcodedNames.has(s.name.toLowerCase().trim())
     );
 
-    return [...coffeeShops, ...newShops];
+    return [...qualityHardcoded, ...newShops];
   }, [nearbyShops]);
 
   const filteredShops = useMemo(() => {

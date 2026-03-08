@@ -136,7 +136,12 @@ Deno.serve(async (req) => {
     }
 
     const shops = (data.places || [])
-      .filter((place: any) => isLikelyCoffeeShop(place.displayName?.text || ""))
+      .filter((place: any) => {
+        if (!isLikelyCoffeeShop(place.displayName?.text || "")) return false;
+        // Require minimum 4.5 rating
+        if ((place.rating || 0) < 4.5) return false;
+        return true;
+      })
       .map((place: any) => {
         const makeProxyUrl = (photoName: string) =>
           `${photoProxyBase}?ref=${encodePhotoRef(photoName)}`;
