@@ -136,6 +136,7 @@ export const coffeeShops: CoffeeShop[] = [
     communityReview: "A New Zealand import that has become a Shoreditch cornerstone. The converted warehouse space is stunning—exposed brick, industrial beams, and the roaster visible through glass. The brunch menu is destination-worthy, and Reddit users rave about the cold brew and seasonal espresso blends. Evenings bring a wine list and relaxed atmosphere. Dog owners particularly love the welcoming policy.",
     sentimentTags: ["Stunning space", "Brunch destination", "Dog friendly", "Evening drinks"],
     nearestTransport: ["Old Street (4 min)", "Shoreditch High Street (6 min)"],
+    verification: { totalLocations: 2, googleRating: 4.4, hasFullInfo: true },
   },
   {
     id: "workshop-marylebone",
