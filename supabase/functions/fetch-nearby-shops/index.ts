@@ -32,7 +32,25 @@ function isLikelyCoffeeShop(name: string): boolean {
 }
 
 // Encode photo ref as base64url so the proxy endpoint can decode it
-function encodePhotoRef(photoName: string): string {
+function inferOpensEarly(place: any): boolean {
+  const periods = place.currentOpeningHours?.periods;
+  if (!periods?.length) return false;
+  return periods.some((p: any) => {
+    const hour = p.open?.hour ?? 99;
+    return hour <= 7;
+  });
+}
+
+function inferOpensLate(place: any): boolean {
+  const periods = place.currentOpeningHours?.periods;
+  if (!periods?.length) return false;
+  return periods.some((p: any) => {
+    const hour = p.close?.hour ?? 0;
+    return hour >= 21 || hour === 0; // closes at 9pm+ or midnight
+  });
+}
+
+
   // Use btoa-safe encoding
   return btoa(photoName).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
@@ -115,7 +133,7 @@ Deno.serve(async (req) => {
       headers: {
         "Content-Type": "application/json",
         "X-Goog-Api-Key": apiKey,
-        "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.location,places.rating,places.userRatingCount,places.photos,places.currentOpeningHours,places.priceLevel,places.types",
+        "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.location,places.rating,places.userRatingCount,places.photos,places.currentOpeningHours,places.priceLevel,places.types,places.dineIn,places.takeout,places.outdoorSeating,places.allowsDogs,places.goodForChildren,places.servesBreakfast,places.servesCoffee",
       },
       body: JSON.stringify({
         includedTypes: ["cafe", "coffee_shop"],
@@ -174,14 +192,14 @@ Deno.serve(async (req) => {
           isOpen: place.currentOpeningHours?.openNow ?? false,
           hours: {},
           attributes: {
-            kidsFriendly: false,
-            laptopFriendly: false,
-            sitIn: true,
-            foodMenu: false,
-            opensEarly: false,
-            opensLate: false,
-            specialtyCoffee: false,
-            dogFriendly: false,
+            kidsFriendly: place.goodForChildren === true,
+            laptopFriendly: false, // not available from Google
+            sitIn: place.dineIn === true || place.outdoorSeating === true,
+            foodMenu: place.servesBreakfast === true,
+            opensEarly: inferOpensEarly(place),
+            opensLate: inferOpensLate(place),
+            specialtyCoffee: false, // not available from Google
+            dogFriendly: place.allowsDogs === true,
           },
           communityReview: "",
           sentimentTags: [],
