@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { isIndependentVerified } from "@/data/coffeeShops";
 import { CoffeeMap } from "@/components/CoffeeMap";
 import { FilterBar } from "@/components/FilterBar";
 import { LocationBar } from "@/components/LocationBar";
