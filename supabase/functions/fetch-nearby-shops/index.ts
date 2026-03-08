@@ -87,9 +87,16 @@ Deno.serve(async (req) => {
       // Decode the photo name
       const padded = ref.replace(/-/g, "+").replace(/_/g, "/");
       const photoName = atob(padded);
+
+      // Validate photo ref format to prevent proxy abuse
+      const VALID_PHOTO_NAME = /^places\/[A-Za-z0-9_-]+\/photos\/[A-Za-z0-9_-]+$/;
+      if (!VALID_PHOTO_NAME.test(photoName)) {
+        return new Response("Invalid photo ref", { status: 400, headers: corsHeaders });
+      }
+
       const photoUrl = `https://places.googleapis.com/v1/${photoName}/media?maxWidthPx=600&key=${apiKey}`;
 
-      const photoRes = await fetch(photoUrl, { redirect: "follow" });
+      const photoRes = await fetch(photoUrl);
       const body = await photoRes.arrayBuffer();
 
       return new Response(body, {
@@ -101,13 +108,14 @@ Deno.serve(async (req) => {
       });
     } catch (err) {
       console.error("Photo proxy error:", err);
-      return new Response("Photo fetch failed", { status: 502, headers: corsHeaders });
+      return new Response("Photo unavailable", { status: 502, headers: corsHeaders });
     }
   }
 
   // Main nearby search
   try {
     const { lat, lng, radius = 1500 } = await req.json();
+    const safeRadius = Math.min(Math.max(Number(radius) || 1500, 100), 5000);
 
     if (!lat || !lng) {
       return new Response(JSON.stringify({ error: "lat and lng required" }), {
@@ -151,7 +159,7 @@ Deno.serve(async (req) => {
         locationRestriction: {
           circle: {
             center: { latitude: lat, longitude: lng },
-            radius: Number(radius),
+            radius: safeRadius,
           },
         },
       }),
@@ -161,7 +169,7 @@ Deno.serve(async (req) => {
 
     if (data.error) {
       console.error("Places API error:", data.error.status, data.error.message);
-      return new Response(JSON.stringify({ error: `Places API: ${data.error.status}`, detail: data.error.message }), {
+      return new Response(JSON.stringify({ error: "Upstream API unavailable" }), {
         status: 502,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -231,7 +239,7 @@ Deno.serve(async (req) => {
     });
   } catch (err) {
     console.error("Edge function error:", err);
-    return new Response(JSON.stringify({ error: String(err) }), {
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
