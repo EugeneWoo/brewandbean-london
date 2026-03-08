@@ -1,12 +1,15 @@
 import { useState, useMemo } from "react";
 import { CoffeeMap } from "@/components/CoffeeMap";
 import { FilterBar } from "@/components/FilterBar";
+import { LocationBar } from "@/components/LocationBar";
 import { AppHeader } from "@/components/AppHeader";
 import { coffeeShops } from "@/data/coffeeShops";
+import { useUserLocation } from "@/hooks/useUserLocation";
 
 const Index = () => {
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [selectedShop, setSelectedShop] = useState<string | null>(null);
+  const locationState = useUserLocation();
 
   const filteredShops = useMemo(() => {
     if (activeFilters.length === 0) return coffeeShops;
@@ -32,10 +35,12 @@ const Index = () => {
         totalCount={coffeeShops.length}
       />
       <div className="flex-1 relative">
+        <LocationBar locationState={locationState} />
         <CoffeeMap
           filteredShops={filteredShops}
           selectedShop={selectedShop}
           onSelectShop={setSelectedShop}
+          userLocation={locationState.location}
         />
       </div>
     </div>

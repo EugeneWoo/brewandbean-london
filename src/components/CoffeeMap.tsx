@@ -1,13 +1,12 @@
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap, CircleMarker } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { CoffeeShop } from "@/data/coffeeShops";
 import { ShopPreviewCard } from "./ShopPreviewCard";
+import type { UserLocation } from "@/hooks/useUserLocation";
 
-/** Test location: Borough / South Bank */
-const USER_LOCATION: [number, number] = [51.5035, -0.0890];
-const MAP_CENTER: [number, number] = USER_LOCATION;
+const DEFAULT_CENTER: [number, number] = [51.515, -0.09];
 
 function createPinIcon(active: boolean) {
   const color = active ? "#FF3008" : "#737373";
@@ -30,20 +29,34 @@ function createPinIcon(active: boolean) {
   });
 }
 
+/** Recenter map when user location changes */
+function MapRecenter({ center }: { center: [number, number] }) {
+  const map = useMap();
+  useEffect(() => {
+    map.setView(center, 14, { animate: true });
+  }, [center[0], center[1]]);
+  return null;
+}
+
 interface CoffeeMapProps {
   filteredShops: CoffeeShop[];
   selectedShop: string | null;
   onSelectShop: (id: string | null) => void;
+  userLocation: UserLocation | null;
 }
 
-export function CoffeeMap({ filteredShops, selectedShop, onSelectShop }: CoffeeMapProps) {
+export function CoffeeMap({ filteredShops, selectedShop, onSelectShop, userLocation }: CoffeeMapProps) {
   const defaultIcon = useMemo(() => createPinIcon(false), []);
   const activeIcon = useMemo(() => createPinIcon(true), []);
 
+  const center: [number, number] = userLocation
+    ? [userLocation.lat, userLocation.lng]
+    : DEFAULT_CENTER;
+
   return (
     <MapContainer
-      center={MAP_CENTER}
-      zoom={13}
+      center={center}
+      zoom={14}
       className="h-full w-full"
       zoomControl={false}
       attributionControl={false}
@@ -53,21 +66,26 @@ export function CoffeeMap({ filteredShops, selectedShop, onSelectShop }: CoffeeM
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>'
       />
 
-      {/* User location */}
-      <CircleMarker
-        center={USER_LOCATION}
-        radius={8}
-        pathOptions={{
-          fillColor: "hsl(217, 91%, 60%)",
-          fillOpacity: 1,
-          color: "white",
-          weight: 3,
-        }}
-      >
-        <Popup>
-          <div className="text-xs font-medium p-1">📍 You are here</div>
-        </Popup>
-      </CircleMarker>
+      {/* Recenter when location updates */}
+      {userLocation && <MapRecenter center={[userLocation.lat, userLocation.lng]} />}
+
+      {/* User location blue dot */}
+      {userLocation && (
+        <CircleMarker
+          center={[userLocation.lat, userLocation.lng]}
+          radius={8}
+          pathOptions={{
+            fillColor: "hsl(217, 91%, 60%)",
+            fillOpacity: 1,
+            color: "white",
+            weight: 3,
+          }}
+        >
+          <Popup>
+            <div className="text-xs font-medium p-1">📍 You are here</div>
+          </Popup>
+        </CircleMarker>
+      )}
 
       {filteredShops.map((shop) => (
         <Marker
