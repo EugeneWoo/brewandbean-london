@@ -257,5 +257,6 @@ export const coffeeShops: CoffeeShop[] = [
     communityReview: "Cornwall's finest export to London's coffee scene. Origin brings a distinct approach—beans roasted at their Cornish HQ with a focus on traceability and direct farmer relationships. The Shoreditch space is sleek and modern with excellent coffee equipment on full display. Reddit users particularly recommend the tasting flights for exploring different origins side by side.",
     sentimentTags: ["Cornwall roasted", "Tasting flights", "Direct trade", "Sleek space"],
     nearestTransport: ["Old Street (5 min)", "Shoreditch High Street (4 min)"],
+    verification: { totalLocations: 3, googleRating: 4.5, hasFullInfo: true },
   },
 ];
