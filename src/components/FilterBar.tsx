@@ -1,14 +1,13 @@
 import { Button } from "@/components/ui/button";
 import {
   Users,
-  Laptop,
   Armchair,
   UtensilsCrossed,
   Sunrise,
   Moon,
-  Coffee,
   Dog,
   X,
+  Clock,
 } from "lucide-react";
 
 export interface FilterOption {
