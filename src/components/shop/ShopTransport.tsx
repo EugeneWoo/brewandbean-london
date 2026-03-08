@@ -21,7 +21,7 @@ export function ShopTransport({ nearestTransport, lat, lng }: ShopTransportProps
       </div>
       <Button variant="outline" className="gap-2" asChild>
         <a
-          href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`}
+          href={`https://maps.google.com/maps?daddr=${lat},${lng}`}
           target="_blank"
           rel="noopener"
         >
