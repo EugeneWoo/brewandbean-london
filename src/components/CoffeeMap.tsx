@@ -55,12 +55,23 @@ function createPinIcon(active: boolean, rating: number, hasBuzz: boolean) {
   });
 }
 
-/** Recenter map when user location changes */
-function MapRecenter({ center }: { center: [number, number] }) {
+/** Fit map to show user location + nearby shops */
+function MapAutoFit({ center, shops }: { center: [number, number]; shops: CoffeeShop[] }) {
   const map = useMap();
   useEffect(() => {
-    map.setView(center, 14, { animate: true });
-  }, [center[0], center[1]]);
+    if (shops.length === 0) {
+      map.setView(center, 14, { animate: true });
+      return;
+    }
+    const bounds = L.latLngBounds([center]);
+    // Include only closest shops to keep zoom tight
+    const sorted = [...shops]
+      .map((s) => ({ s, d: Math.abs(s.lat - center[0]) + Math.abs(s.lng - center[1]) }))
+      .sort((a, b) => a.d - b.d)
+      .slice(0, 10);
+    sorted.forEach(({ s }) => bounds.extend([s.lat, s.lng]));
+    map.fitBounds(bounds, { padding: [60, 60], maxZoom: 16, animate: true });
+  }, [center[0], center[1], shops.length]);
   return null;
 }
 
