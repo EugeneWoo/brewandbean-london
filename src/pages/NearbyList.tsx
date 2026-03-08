@@ -67,7 +67,7 @@ const NearbyList = () => {
         distance: haversineKm(userLat, userLng, shop.lat, shop.lng),
       }))
       .sort((a, b) => rankScore(a.distance, a.shop.verification.googleRating) - rankScore(b.distance, b.shop.verification.googleRating))
-      .slice(0, 5);
+      .slice(0, 10);
   }, [filteredShops, locationState.location]);
 
   const toggleFilter = (key: string) => {
