@@ -1,4 +1,4 @@
-import { CoffeeShop } from "@/data/coffeeShops";
+import { CoffeeShop, isIndependentVerified } from "@/data/coffeeShops";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BadgeCheck, MapPin } from "lucide-react";
