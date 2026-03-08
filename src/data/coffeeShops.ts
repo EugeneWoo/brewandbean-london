@@ -63,10 +63,9 @@ export interface CoffeeShop {
 
 export function isIndependentVerified(shop: CoffeeShop): boolean {
   const nameLower = shop.name.toLowerCase();
-  const isChain = EXCLUDED_CHAINS.some(
-    (chain) => nameLower.includes(chain)
-  );
-  if (isChain) return false;
+  const isChain = EXCLUDED_CHAINS.some((chain) => nameLower.includes(chain));
+  const isBakery = EXCLUDED_BAKERIES.some((b) => nameLower.includes(b));
+  if (isChain || isBakery) return false;
   if (shop.verification.totalLocations > 5) return false;
   if (shop.verification.googleRating < 4.0) return false;
   if (!shop.verification.hasFullInfo) return false;
