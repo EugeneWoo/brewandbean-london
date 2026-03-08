@@ -115,6 +115,7 @@ Deno.serve(async (req) => {
   // Main nearby search
   try {
     const { lat, lng, radius = 1500 } = await req.json();
+    const safeRadius = Math.min(Math.max(Number(radius) || 1500, 100), 5000);
 
     if (!lat || !lng) {
       return new Response(JSON.stringify({ error: "lat and lng required" }), {
