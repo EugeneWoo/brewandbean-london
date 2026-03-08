@@ -1,0 +1,157 @@
+import type { RedditReview } from "./coffeeShops";
+
+/** Reddit reviews keyed by shop id */
+export const redditReviewsByShop: Record<string, RedditReview[]> = {
+  "monmouth-bermondsey": [
+    {
+      subreddit: "r/london",
+      author: "calattor",
+      quote: "Monmouth in Borough is a must-visit. The queue on Saturday is long but moves fast, and the single-origin filter is some of the best I've had in London. The communal seating is charming — you end up chatting to strangers about coffee.",
+      date: "Jan 2024",
+      score: 19,
+      threadUrl: "https://www.reddit.com/r/london/comments/195no7u/specialty_coffee_shops_in_london/",
+    },
+    {
+      subreddit: "r/Coffee",
+      author: "bigboystrelitzia",
+      quote: "Monmouth is a London institution. Their beans are roasted in-house and the flat white is consistently excellent. No laptops allowed which keeps the vibe social and unhurried. My go-to whenever I'm near Borough Market.",
+      date: "May 2019",
+      score: 8,
+      threadUrl: "https://www.reddit.com/r/Coffee/comments/bnd9ds/best_coffee_in_london/",
+    },
+  ],
+  "prufrock-leather-lane": [
+    {
+      subreddit: "r/JamesHoffmann",
+      author: "einnmann",
+      quote: "Finally made it to Prufrock. I was randomly seated there, and then my brain was 'wait a second...' Needless to say that the food and coffee are exceptional. I have Ascaso DUO PID and P64 at home and honestly my espresso isn't as good.",
+      date: "Nov 2024",
+      score: 306,
+      threadUrl: "https://www.reddit.com/r/JamesHoffmann/comments/1gopcd4/finally_made_it_to_prufrock/",
+    },
+    {
+      subreddit: "r/JamesHoffmann",
+      author: "zvchtvbb",
+      quote: "I'll never forget my experience at Prufrock. The espresso (literally just Red Brick) was the best espresso I've ever had. Life-changing coffee in a space that feels like a pilgrimage site for specialty nerds.",
+      date: "Nov 2024",
+      score: 15,
+      threadUrl: "https://www.reddit.com/r/JamesHoffmann/comments/1ghibg0/prufrock_today/",
+    },
+    {
+      subreddit: "r/pourover",
+      author: "ego_brews",
+      quote: "Prufrock is the OG London specialty shop. Founded by a World Barista Champion — the pour-over menu rotates weekly and the baristas actually know their stuff. Square Mile beans brewed perfectly every time.",
+      date: "Nov 2022",
+      score: 10,
+      threadUrl: "https://www.reddit.com/r/pourover/comments/yoz20y/london_coffee_roasters/",
+    },
+  ],
+  "ozone-shoreditch": [
+    {
+      subreddit: "r/Coffee",
+      author: "jazzycatnohat",
+      quote: "Ozone in Shoreditch completely blew me away. The converted warehouse space is stunning — exposed brick, industrial beams, and the roaster visible through glass. The cold brew and seasonal espresso blends are next level. Also one of the few places that does great evening food too.",
+      date: "Aug 2019",
+      score: 216,
+      threadUrl: "https://www.reddit.com/r/Coffee/comments/cklam8/londons_coffee_has_blown_me_away/",
+    },
+    {
+      subreddit: "r/london",
+      author: "C-137PrincipalVagina",
+      quote: "Ozone is my go-to brunch + coffee spot. They roast their own NZ-style beans, the space is massive and dog-friendly, and Thursday/Friday evenings they do wine and cocktails. Hard to beat for an all-rounder in Shoreditch.",
+      date: "Dec 2018",
+      score: 14,
+      threadUrl: "https://www.reddit.com/r/Coffee/comments/a59l42/are_there_many_londoners_in_this_sub_looking_for/",
+    },
+  ],
+  "workshop-marylebone": [
+    {
+      subreddit: "r/Coffee",
+      author: "n8redd",
+      quote: "Love love love Workshop. The Fitzrovia space is minimalist perfection — direct trade beans roasted at their Bethnal Green facility. Consistently the best espresso in the West End. Great for getting work done too.",
+      date: "May 2019",
+      score: 6,
+      threadUrl: "https://www.reddit.com/r/Coffee/comments/bnd9ds/best_coffee_in_london/",
+    },
+    {
+      subreddit: "r/pourover",
+      author: "njm__",
+      quote: "Workshop is underrated. Their single origins are always interesting and the baristas really care about dialling in. The pastries from local bakeries are a nice touch. Calm, focused atmosphere — my top pick for Fitzrovia.",
+      date: "Nov 2022",
+      score: 12,
+      threadUrl: "https://www.reddit.com/r/pourover/comments/yoz20y/london_coffee_roasters/",
+    },
+  ],
+  "rosslyn-city": [
+    {
+      subreddit: "r/Coffee",
+      author: "rockwarriorsway",
+      quote: "Rosslyn is a hidden gem in the City. They source from The Barn in Berlin and produce some of the most refined light-roast espresso in London. The staff are genuinely friendly and the tiny space is beautifully designed. Perfect escape from the Square Mile chaos.",
+      date: "May 2019",
+      score: 4,
+      threadUrl: "https://www.reddit.com/r/Coffee/comments/bnd9ds/best_coffee_in_london/",
+    },
+    {
+      subreddit: "r/london",
+      author: "specialty_seeker_ldn",
+      quote: "If you work in the City and haven't been to Rosslyn you're missing out. Light roast done right, beautiful interior, and the team remember your name after a couple of visits. Only downside is weekday-only hours.",
+      date: "Jan 2024",
+      score: 11,
+      threadUrl: "https://www.reddit.com/r/london/comments/195no7u/specialty_coffee_shops_in_london/",
+    },
+  ],
+  "watchhouse-bermondsey": [
+    {
+      subreddit: "r/pourover",
+      author: "amsterdamvibes",
+      quote: "Some excellent pour over at WatchHouse London. Tried the Colombia Gesha (white honey process). Very light mouthfeel with notes of lavender and caramel when hot, and as it cooled got notes of stone fruits, raisin and figs. Loved the complexity and finish.",
+      date: "Jun 2024",
+      score: 31,
+      threadUrl: "https://www.reddit.com/r/pourover/comments/1dizdsp/some_excellent_pour_over_at_watchhouse_london/",
+    },
+    {
+      subreddit: "r/london",
+      author: "bermondsey_local",
+      quote: "WatchHouse Bermondsey Street is basically my living room. Set in a converted 19th-century watch house — the architecture alone is worth the visit. Great light, dog-friendly, and the house roast is smooth enough for non-coffee-nerds while still being proper specialty.",
+      date: "Jan 2024",
+      score: 15,
+      threadUrl: "https://www.reddit.com/r/london/comments/195no7u/specialty_coffee_shops_in_london/",
+    },
+  ],
+  "climpson-sons": [
+    {
+      subreddit: "r/Coffee",
+      author: "SpaceLionBlues",
+      quote: "Climpson & Sons helped put Hackney on the coffee map. Their single-origin filter is consistently outstanding and Saturday mornings during Broadway Market are a vibrant community experience. The staff remember regulars' orders — proper neighbourhood café energy.",
+      date: "Jun 2020",
+      score: 13,
+      threadUrl: "https://www.reddit.com/r/Coffee/comments/gx3av5/speciality_coffee_roasters_uk/",
+    },
+    {
+      subreddit: "r/pourover",
+      author: "ego_brews",
+      quote: "Climpson's is a must if you're in Hackney. They've been at it for over a decade and the quality hasn't dropped. The outdoor seating on Broadway Market is prime people-watching territory. Their beans are excellent for home brewing too.",
+      date: "Nov 2022",
+      score: 10,
+      threadUrl: "https://www.reddit.com/r/pourover/comments/yoz20y/london_coffee_roasters/",
+    },
+  ],
+  "origin-shoreditch": [
+    {
+      subreddit: "r/Coffee",
+      author: "jazzycatnohat",
+      quote: "Origin Coffee brings a distinct Cornish approach to Shoreditch. Beans roasted at their Cornwall HQ with a focus on traceability and direct farmer relationships. The tasting flights are brilliant for exploring different origins side by side — highly recommend.",
+      date: "Aug 2019",
+      score: 216,
+      threadUrl: "https://www.reddit.com/r/Coffee/comments/cklam8/londons_coffee_has_blown_me_away/",
+    },
+    {
+      subreddit: "r/pourover",
+      author: "yasaumbasa",
+      quote: "Origin on Charlotte Road is sleek and modern with excellent equipment on full display. The pour-over is always on point and the staff are passionate without being pretentious. One of the best in East London for filter.",
+      date: "Feb 2024",
+      score: 16,
+      threadUrl: "https://www.reddit.com/r/pourover/comments/1az1m0m/wheres_great_for_pourover_in_london/",
+    },
+  ],
+};
