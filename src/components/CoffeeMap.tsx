@@ -4,28 +4,54 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { CoffeeShop } from "@/data/coffeeShops";
 import { ShopPreviewCard } from "./ShopPreviewCard";
+import { redditReviewsByShop, redditSentimentByShop } from "@/data/redditReviews";
 import type { UserLocation } from "@/hooks/useUserLocation";
 
 const DEFAULT_CENTER: [number, number] = [51.515, -0.09];
 
-function createPinIcon(active: boolean) {
+function hasRedditBuzz(shopId: string): boolean {
+  return !!(redditReviewsByShop[shopId]?.length || redditSentimentByShop[shopId]);
+}
+
+function createPinIcon(active: boolean, rating: number, hasBuzz: boolean) {
   const color = active ? "#FF3008" : "#737373";
   const size = active ? 38 : 32;
+  const buzzDot = hasBuzz
+    ? `<span style="position:absolute;top:-2px;right:-2px;width:8px;height:8px;background:#8B5CF6;border-radius:50%;border:1.5px solid white;"></span>`
+    : "";
   return L.divIcon({
     className: "",
-    iconSize: [size, size],
-    iconAnchor: [size / 2, size],
-    popupAnchor: [0, -size + 4],
-    html: `<div style="
-      width:${size}px;height:${size}px;
-      background:${color};
-      border-radius:50% 50% 50% 0;
-      transform:rotate(-45deg);
-      border:2.5px solid white;
-      box-shadow:0 2px 8px rgba(0,0,0,0.25);
-      display:flex;align-items:center;justify-content:center;
-      transition:all 0.2s ease;
-    "><span style="transform:rotate(45deg);font-size:${active ? 16 : 14}px;">☕</span></div>`,
+    iconSize: [size, size + 16],
+    iconAnchor: [size / 2, size + 16],
+    popupAnchor: [0, -(size + 12)],
+    html: `<div style="position:relative;display:flex;flex-direction:column;align-items:center;">
+      <div style="
+        position:relative;
+        width:${size}px;height:${size}px;
+        background:${color};
+        border-radius:50% 50% 50% 0;
+        transform:rotate(-45deg);
+        border:2.5px solid white;
+        box-shadow:0 2px 8px rgba(0,0,0,0.25);
+        display:flex;align-items:center;justify-content:center;
+        transition:all 0.2s ease;
+      ">
+        <span style="transform:rotate(45deg);font-size:${active ? 16 : 14}px;">☕</span>
+        ${buzzDot}
+      </div>
+      <span style="
+        margin-top:2px;
+        background:white;
+        color:#333;
+        font-size:10px;
+        font-weight:600;
+        padding:1px 4px;
+        border-radius:4px;
+        box-shadow:0 1px 3px rgba(0,0,0,0.15);
+        font-family:'DM Sans',sans-serif;
+        line-height:1.2;
+      ">★ ${rating.toFixed(1)}</span>
+    </div>`,
   });
 }
 
@@ -46,9 +72,6 @@ interface CoffeeMapProps {
 }
 
 export function CoffeeMap({ filteredShops, selectedShop, onSelectShop, userLocation }: CoffeeMapProps) {
-  const defaultIcon = useMemo(() => createPinIcon(false), []);
-  const activeIcon = useMemo(() => createPinIcon(true), []);
-
   const center: [number, number] = userLocation
     ? [userLocation.lat, userLocation.lng]
     : DEFAULT_CENTER;
@@ -87,20 +110,28 @@ export function CoffeeMap({ filteredShops, selectedShop, onSelectShop, userLocat
         </CircleMarker>
       )}
 
-      {filteredShops.map((shop) => (
-        <Marker
-          key={shop.id}
-          position={[shop.lat, shop.lng]}
-          icon={selectedShop === shop.id ? activeIcon : defaultIcon}
-          eventHandlers={{
-            click: () => onSelectShop(shop.id),
-          }}
-        >
-          <Popup>
-            <ShopPreviewCard shop={shop} />
-          </Popup>
-        </Marker>
-      ))}
+      {filteredShops.map((shop) => {
+        const buzz = hasRedditBuzz(shop.id);
+        const icon = createPinIcon(
+          selectedShop === shop.id,
+          shop.verification.googleRating,
+          buzz
+        );
+        return (
+          <Marker
+            key={shop.id}
+            position={[shop.lat, shop.lng]}
+            icon={icon}
+            eventHandlers={{
+              click: () => onSelectShop(shop.id),
+            }}
+          >
+            <Popup>
+              <ShopPreviewCard shop={shop} hasRedditBuzz={buzz} />
+            </Popup>
+          </Marker>
+        );
+      })}
     </MapContainer>
   );
 }
