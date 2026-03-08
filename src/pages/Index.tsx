@@ -35,12 +35,44 @@ const Index = () => {
     return [...qualityHardcoded, ...newShops];
   }, [nearbyShops]);
 
+  // Deduplicate visually overlapping shops — keep the one closest to user
+  const deduplicatedShops = useMemo(() => {
+    const OVERLAP_THRESHOLD_KM = 0.05; // ~50m — pins overlap at this distance
+    const userLat = locationState.location?.lat ?? 51.515;
+    const userLng = locationState.location?.lng ?? -0.09;
+
+    const toRad = (deg: number) => (deg * Math.PI) / 180;
+    const haversine = (lat1: number, lng1: number, lat2: number, lng2: number) => {
+      const R = 6371;
+      const dLat = toRad(lat2 - lat1);
+      const dLng = toRad(lng2 - lng1);
+      const a =
+        Math.sin(dLat / 2) ** 2 +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    };
+
+    // Sort by distance to user (closest first) so we keep the nearest one
+    const sorted = [...allShops].sort(
+      (a, b) => haversine(userLat, userLng, a.lat, a.lng) - haversine(userLat, userLng, b.lat, b.lng)
+    );
+
+    const kept: typeof allShops = [];
+    for (const shop of sorted) {
+      const overlaps = kept.some(
+        (k) => haversine(k.lat, k.lng, shop.lat, shop.lng) < OVERLAP_THRESHOLD_KM
+      );
+      if (!overlaps) kept.push(shop);
+    }
+    return kept;
+  }, [allShops, locationState.location]);
+
   const filteredShops = useMemo(() => {
-    if (activeFilters.length === 0) return allShops;
-    return allShops.filter((shop) =>
+    if (activeFilters.length === 0) return deduplicatedShops;
+    return deduplicatedShops.filter((shop) =>
       activeFilters.every((f) => shop.attributes[f as keyof typeof shop.attributes])
     );
-  }, [activeFilters, allShops]);
+  }, [activeFilters, deduplicatedShops]);
 
   const toggleFilter = (key: string) => {
     setActiveFilters((prev) =>
