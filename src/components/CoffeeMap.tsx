@@ -100,8 +100,8 @@ export function CoffeeMap({ filteredShops, selectedShop, onSelectShop, userLocat
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       />
 
-      {/* Recenter when location updates */}
-      {userLocation && <MapRecenter center={[userLocation.lat, userLocation.lng]} />}
+      {/* Auto-fit to show user + shops */}
+      {userLocation && <MapAutoFit center={[userLocation.lat, userLocation.lng]} shops={filteredShops} />}
 
       {/* User location blue dot */}
       {userLocation && (
