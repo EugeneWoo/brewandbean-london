@@ -1,13 +1,11 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { isIndependentVerified } from "@/data/coffeeShops";
-import { coffeeShops } from "@/data/coffeeShops";
-import type { CoffeeShop } from "@/data/coffeeShops";
 import { FilterBar } from "@/components/FilterBar";
 import { AppHeader } from "@/components/AppHeader";
 import { LocationBar } from "@/components/LocationBar";
 import { useUserLocation } from "@/hooks/useUserLocation";
 import { useNearbyShops } from "@/hooks/useNearbyShops";
+import { useAllShops } from "@/hooks/useAllShops";
 import { NearbyShopCard } from "@/components/NearbyShopCard";
 import { Loader2 } from "lucide-react";
 
@@ -22,10 +20,9 @@ function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): nu
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-/** Composite score: lower = better. Normalises distance (0-5km) and inverts rating (5→0). */
 function rankScore(distKm: number, rating: number): number {
-  const distNorm = Math.min(distKm / 5, 1); // cap at 5km
-  const ratingNorm = 1 - (rating - 4) / 1.5; // 4.0→0.67, 5.0→0
+  const distNorm = Math.min(distKm / 5, 1);
+  const ratingNorm = 1 - (rating - 4) / 1.5;
   return distNorm * 0.6 + ratingNorm * 0.4;
 }
 
@@ -35,20 +32,7 @@ const NearbyList = () => {
   const { shops: nearbyShops, loading: nearbyLoading } = useNearbyShops(locationState.location);
   const navigate = useNavigate();
 
-  const allShops = useMemo(() => {
-    const qualityHardcoded = coffeeShops.filter(
-      (s) => isIndependentVerified(s) && s.verification.googleRating >= 4.5
-    );
-    if (nearbyShops.length === 0) return qualityHardcoded;
-
-    const hardcodedNames = new Set(
-      qualityHardcoded.map((s) => s.name.toLowerCase().trim())
-    );
-    const newShops = nearbyShops.filter(
-      (s) => !hardcodedNames.has(s.name.toLowerCase().trim())
-    );
-    return [...qualityHardcoded, ...newShops];
-  }, [nearbyShops]);
+  const allShops = useAllShops(nearbyShops, locationState.location);
 
   const filteredShops = useMemo(() => {
     if (activeFilters.length === 0) return allShops;
