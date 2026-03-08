@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { MapPin, Navigation, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,19 +8,26 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { LocationState } from "@/hooks/useUserLocation";
+import { coffeeShops } from "@/data/coffeeShops";
 
-/** Preset areas for the fallback picker */
-const AREA_PRESETS: { label: string; lat: number; lng: number }[] = [
-  { label: "Borough / South Bank", lat: 51.5035, lng: -0.089 },
-  { label: "Shoreditch / East", lat: 51.527, lng: -0.082 },
-  { label: "Fitzrovia / West End", lat: 51.519, lng: -0.139 },
-  { label: "Clerkenwell / Farringdon", lat: 51.521, lng: -0.109 },
-  { label: "Hackney / Broadway Market", lat: 51.535, lng: -0.061 },
-  { label: "Dalston", lat: 51.546, lng: -0.075 },
-  { label: "City of London", lat: 51.512, lng: -0.094 },
-  { label: "Holloway / North London", lat: 51.551, lng: -0.115 },
-  { label: "Covent Garden", lat: 51.514, lng: -0.121 },
-];
+/** Derive unique areas from shop data, using the average lat/lng of shops in each neighbourhood */
+function deriveAreaPresets(): { label: string; lat: number; lng: number }[] {
+  const groups: Record<string, { lats: number[]; lngs: number[] }> = {};
+  for (const shop of coffeeShops) {
+    if (!groups[shop.neighborhood]) {
+      groups[shop.neighborhood] = { lats: [], lngs: [] };
+    }
+    groups[shop.neighborhood].lats.push(shop.lat);
+    groups[shop.neighborhood].lngs.push(shop.lng);
+  }
+  return Object.entries(groups)
+    .map(([label, { lats, lngs }]) => ({
+      label,
+      lat: lats.reduce((a, b) => a + b, 0) / lats.length,
+      lng: lngs.reduce((a, b) => a + b, 0) / lngs.length,
+    }))
+    .sort((a, b) => a.label.localeCompare(b.label));
+}
 
 interface LocationBarProps {
   locationState: LocationState;
@@ -28,6 +36,7 @@ interface LocationBarProps {
 export function LocationBar({ locationState }: LocationBarProps) {
   const { nearestNeighborhood, nearbyCount, status, setManualLocation, retry } =
     locationState;
+  const areaPresets = useMemo(() => deriveAreaPresets(), []);
 
   return (
     <div className="absolute top-3 left-3 z-[1000] flex items-center gap-2">
@@ -79,7 +88,7 @@ export function LocationBar({ locationState }: LocationBarProps) {
               Use my location
             </DropdownMenuItem>
           )}
-          {AREA_PRESETS.map((area) => (
+          {areaPresets.map((area) => (
             <DropdownMenuItem
               key={area.label}
               onClick={() => setManualLocation(area.lat, area.lng)}
