@@ -20,6 +20,8 @@ const EXCLUDED_NAMES = [
   "starbucks", "pret a manger", "pret ", "greggs",
   "gail's", "gails", "blank street", "black sheep",
   "coffee republic", "wild bean cafe",
+  // Non-specialty breakfast/restaurant spots
+  "grubberie", "luis' cafe", "luis cafe",
 ];
 
 function gridKey(lat: number, lng: number): string {
