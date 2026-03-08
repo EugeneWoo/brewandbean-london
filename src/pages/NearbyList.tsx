@@ -53,7 +53,10 @@ const NearbyList = () => {
   const filteredShops = useMemo(() => {
     if (activeFilters.length === 0) return allShops;
     return allShops.filter((shop) =>
-      activeFilters.every((f) => shop.attributes[f as keyof typeof shop.attributes])
+      activeFilters.every((f) => {
+        if (f === "openNow") return shop.isOpen;
+        return shop.attributes[f as keyof typeof shop.attributes];
+      })
     );
   }, [activeFilters, allShops]);
 
