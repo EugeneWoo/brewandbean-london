@@ -68,7 +68,7 @@ export const redditReviewsByShop: Record<string, RedditReview[]> = {
     {
       subreddit: "r/Coffee",
       author: "n8redd",
-      quote: "Love love love Workshop. The Fitzrovia space is minimalist perfection — direct trade beans roasted at their Bethnal Green facility. Consistently the best espresso in the West End. Great for getting work done too.",
+      quote: "Love love love Workshop.",
       date: "May 2019",
       score: 6,
       threadUrl: "https://www.reddit.com/r/Coffee/comments/bnd9ds/best_coffee_in_london/",
