@@ -159,7 +159,7 @@ Deno.serve(async (req) => {
         locationRestriction: {
           circle: {
             center: { latitude: lat, longitude: lng },
-            radius: Number(radius),
+            radius: safeRadius,
           },
         },
       }),
