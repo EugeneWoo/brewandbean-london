@@ -341,24 +341,6 @@ export const coffeeShops: CoffeeShop[] = [
 
   // ── Islington / Angel ─────────────────────────────────────
   {
-    id: "pophams-islington",
-    name: "Pophams",
-    address: "19 Prebend Street, N1 8PF",
-    neighborhood: "Islington",
-    lat: 51.5363, lng: -0.1060,
-    image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&h=400&fit=crop",
-    photos: ["https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&h=400&fit=crop"],
-    roaster: "Assembly Coffee", phone: "+44 20 7607 3590",
-    website: "https://pophamsbakery.com", instagram: "@pophamsbakery",
-    isOpen: true,
-    hours: { Mon: "8:00–16:00", Tue: "8:00–16:00", Wed: "8:00–16:00", Thu: "8:00–16:00", Fri: "8:00–16:00", Sat: "8:00–16:00", Sun: "8:00–16:00" },
-    attributes: { kidsFriendly: true, laptopFriendly: false, sitIn: true, foodMenu: true, opensEarly: true, opensLate: false, specialtyCoffee: true, dogFriendly: false },
-    communityReview: "Pophams is as much a bakery as a café — their sourdough croissants and fermented pastries have a cult following. Assembly beans power the espresso. Regularly cited as one of London's best bakery-cafés on Reddit and Time Out.",
-    sentimentTags: ["Cult pastries", "Sourdough croissants", "Assembly beans", "Angel favourite"],
-    nearestTransport: ["Angel (4 min)", "King's Cross (8 min)"],
-    verification: { totalLocations: 3, googleRating: 4.6, hasFullInfo: true },
-  },
-  {
     id: "kin-cafe-islington",
     name: "Kin Cafe",
     address: "22 Chapel Market, N1 9EZ",
