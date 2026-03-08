@@ -103,11 +103,12 @@ export function CoffeeMap({ filteredShops, selectedShop, onSelectShop, userLocat
       {/* Auto-fit to show user + shops */}
       {userLocation && <MapAutoFit center={[userLocation.lat, userLocation.lng]} shops={filteredShops} />}
 
-      {/* User location blue dot */}
+      {/* User location blue dot — rendered AFTER shop markers + high pane to stay on top */}
       {userLocation && (
         <CircleMarker
           center={[userLocation.lat, userLocation.lng]}
           radius={8}
+          pane="markerPane"
           pathOptions={{
             fillColor: "hsl(217, 91%, 60%)",
             fillOpacity: 1,
