@@ -223,6 +223,12 @@ Deno.serve(async (req) => {
       });
     }
 
+    // DEBUG: log raw results
+    console.log(`Raw places count: ${(data.places || []).length}`);
+    (data.places || []).forEach((p: any) => {
+      console.log(`  "${p.displayName?.text}" rating=${p.rating} types=[${(p.types || []).join(",")}]`);
+    });
+
     const shops = (data.places || [])
       .filter((place: any) => {
         if (!isLikelyCoffeeShop(place.displayName?.text || "", place.types || [])) return false;
