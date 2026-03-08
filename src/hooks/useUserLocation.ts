@@ -54,7 +54,7 @@ function countNearby(lat: number, lng: number): number {
 
 export function useUserLocation(): LocationState {
   const [location, setLocation] = useState<UserLocation | null>(null);
-  const [status, setStatus] = useState<LocationState["status"]>("loading");
+  const [status, setStatus] = useState<LocationState["status"]>("denied");
   const [error, setError] = useState<string | null>(null);
 
   const watchIdRef = useRef<number | null>(null);
@@ -73,28 +73,10 @@ export function useUserLocation(): LocationState {
 
     setStatus("loading");
 
-    // First try a quick low-accuracy position, then upgrade to watch
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        console.log("[Location] Quick fix:", pos.coords.latitude, pos.coords.longitude);
-        setLocation({
-          lat: pos.coords.latitude,
-          lng: pos.coords.longitude,
-          source: "geolocation",
-        });
-        setStatus("granted");
-        setError(null);
-      },
-      (err) => {
-        console.log("[Location] Quick fix failed:", err.code, err.message);
-      },
-      { enableHighAccuracy: false, timeout: 5000, maximumAge: 300000 }
-    );
-
-    // Then use watchPosition for live high-accuracy updates
+    // Use watchPosition — must be called from user gesture on Safari
     watchIdRef.current = navigator.geolocation.watchPosition(
       (pos) => {
-        console.log("[Location] Watch update:", pos.coords.latitude, pos.coords.longitude, "accuracy:", pos.coords.accuracy);
+        console.log("[Location] Update:", pos.coords.latitude, pos.coords.longitude, "accuracy:", pos.coords.accuracy);
         setLocation({
           lat: pos.coords.latitude,
           lng: pos.coords.longitude,
@@ -104,26 +86,26 @@ export function useUserLocation(): LocationState {
         setError(null);
       },
       (err) => {
-        console.log("[Location] Watch error:", err.code, err.message);
+        console.log("[Location] Error:", err.code, err.message);
         setStatus("denied");
         setError(
           err.code === 1
-            ? "Location permission denied"
+            ? "Location permission denied. Please enable Location Services in Safari Settings."
             : "Could not determine location"
         );
       },
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 60000 }
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
     );
   }, []);
 
+  // Cleanup watch on unmount
   useEffect(() => {
-    requestGeolocation();
     return () => {
       if (watchIdRef.current !== null) {
         navigator.geolocation.clearWatch(watchIdRef.current);
       }
     };
-  }, [requestGeolocation]);
+  }, []);
 
   const setManualLocation = useCallback((lat: number, lng: number) => {
     setLocation({ lat, lng, source: "manual" });
