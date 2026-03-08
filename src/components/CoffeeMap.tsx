@@ -126,22 +126,35 @@ export function CoffeeMap({ filteredShops, selectedShop, onSelectShop, userLocat
         );
       })}
 
-      {/* User location blue dot — rendered AFTER shop markers to stay on top */}
+      {/* User location — outer pulse ring + bright blue dot */}
       {userLocation && (
-        <CircleMarker
-          center={[userLocation.lat, userLocation.lng]}
-          radius={8}
-          pathOptions={{
-            fillColor: "hsl(217, 91%, 60%)",
-            fillOpacity: 1,
-            color: "white",
-            weight: 3,
-          }}
-        >
-          <Popup>
-            <div className="text-xs font-medium p-1">📍 You are here</div>
-          </Popup>
-        </CircleMarker>
+        <>
+          <CircleMarker
+            center={[userLocation.lat, userLocation.lng]}
+            radius={20}
+            pathOptions={{
+              fillColor: "hsl(217, 91%, 60%)",
+              fillOpacity: 0.15,
+              color: "hsl(217, 91%, 60%)",
+              weight: 1.5,
+              opacity: 0.4,
+            }}
+          />
+          <CircleMarker
+            center={[userLocation.lat, userLocation.lng]}
+            radius={10}
+            pathOptions={{
+              fillColor: "hsl(217, 100%, 55%)",
+              fillOpacity: 1,
+              color: "white",
+              weight: 3.5,
+            }}
+          >
+            <Popup>
+              <div className="text-xs font-medium p-1">📍 You are here</div>
+            </Popup>
+          </CircleMarker>
+        </>
       )}
     </MapContainer>
   );
