@@ -121,6 +121,7 @@ Deno.serve(async (req) => {
         includedTypes: ["cafe", "coffee_shop"],
         excludedTypes: ["hotel", "lodging", "school", "university", "library", "gas_station", "supermarket", "grocery_store"],
         maxResultCount: 20,
+        rankPreference: "DISTANCE",
         locationRestriction: {
           circle: {
             center: { latitude: lat, longitude: lng },
