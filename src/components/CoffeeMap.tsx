@@ -116,7 +116,8 @@ export function CoffeeMap({ filteredShops, selectedShop, onSelectShop, userLocat
             position={[shop.lat, shop.lng]}
             icon={icon}
             eventHandlers={{
-              click: () => onSelectShop(shop.id),
+              click: () => onSelectShop(selectedShop === shop.id ? null : shop.id),
+              popupclose: () => onSelectShop(null),
             }}
           >
             <Popup>
