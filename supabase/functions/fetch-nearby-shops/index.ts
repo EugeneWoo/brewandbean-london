@@ -39,13 +39,31 @@ function normalize(s: string): string {
     .replace(/[\u2018\u2019\u2032\u0060]/g, "'"); // normalize quotes
 }
 
+// Google Place types that indicate the venue is NOT a standalone coffee shop
+const NON_STANDALONE_TYPES = [
+  "restaurant", "bar", "night_club", "pub",
+  "clothing_store", "shoe_store", "store", "shopping_mall", "department_store",
+  "boutique", "gift_shop", "book_store", "furniture_store",
+  "hotel", "lodging", "motel", "resort_hotel",
+  "museum", "art_gallery", "tourist_attraction", "amusement_park",
+  "park", "national_park", "campground",
+  "gym", "spa", "beauty_salon", "hair_care",
+  "hospital", "pharmacy", "doctor",
+  "church", "mosque", "synagogue", "hindu_temple",
+  "library", "school", "university",
+  "supermarket", "grocery_store", "convenience_store",
+  "gas_station", "car_dealer", "car_repair",
+  "non_governmental_organization", "local_government_office",
+  "meal_delivery", "meal_takeaway",
+  "canteen", "food_court",
+];
+
 function isLikelyCoffeeShop(name: string, types: string[] = []): boolean {
   const norm = normalize(name);
   if (EXCLUDED_NAMES.some((ex) => norm.includes(ex))) return false;
 
-  // Exclude places typed as "restaurant" — they're eateries, not indie coffee
-  // Exception: keep if name mentions "brunch"
-  if (types.includes("restaurant") && !norm.includes("brunch")) return false;
+  // Exclude venues whose Google types indicate they're not standalone coffee shops
+  if (NON_STANDALONE_TYPES.some((t) => types.includes(t))) return false;
 
   return true;
 }
