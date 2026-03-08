@@ -5,18 +5,35 @@ import { LocationBar } from "@/components/LocationBar";
 import { AppHeader } from "@/components/AppHeader";
 import { coffeeShops } from "@/data/coffeeShops";
 import { useUserLocation } from "@/hooks/useUserLocation";
+import { useNearbyShops } from "@/hooks/useNearbyShops";
 
 const Index = () => {
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [selectedShop, setSelectedShop] = useState<string | null>(null);
   const locationState = useUserLocation();
+  const { shops: nearbyShops, loading: nearbyLoading } = useNearbyShops(locationState.location);
+
+  // Merge hardcoded shops with Google Places results, deduplicating by name similarity
+  const allShops = useMemo(() => {
+    if (nearbyShops.length === 0) return coffeeShops;
+
+    const hardcodedNames = new Set(
+      coffeeShops.map((s) => s.name.toLowerCase().trim())
+    );
+
+    const newShops = nearbyShops.filter(
+      (s) => !hardcodedNames.has(s.name.toLowerCase().trim())
+    );
+
+    return [...coffeeShops, ...newShops];
+  }, [nearbyShops]);
 
   const filteredShops = useMemo(() => {
-    if (activeFilters.length === 0) return coffeeShops;
-    return coffeeShops.filter((shop) =>
+    if (activeFilters.length === 0) return allShops;
+    return allShops.filter((shop) =>
       activeFilters.every((f) => shop.attributes[f as keyof typeof shop.attributes])
     );
-  }, [activeFilters]);
+  }, [activeFilters, allShops]);
 
   const toggleFilter = (key: string) => {
     setActiveFilters((prev) =>
@@ -32,10 +49,15 @@ const Index = () => {
         onToggleFilter={toggleFilter}
         onClearAll={() => setActiveFilters([])}
         matchCount={filteredShops.length}
-        totalCount={coffeeShops.length}
+        totalCount={allShops.length}
       />
       <div className="flex-1 relative">
         <LocationBar locationState={locationState} />
+        {nearbyLoading && (
+          <div className="absolute top-12 left-1/2 -translate-x-1/2 z-[1000] bg-background/90 backdrop-blur px-3 py-1.5 rounded-full text-xs text-muted-foreground shadow-sm border border-border">
+            Loading nearby shops…
+          </div>
+        )}
         <CoffeeMap
           filteredShops={filteredShops}
           selectedShop={selectedShop}
