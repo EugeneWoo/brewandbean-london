@@ -209,6 +209,7 @@ export const coffeeShops: CoffeeShop[] = [
     communityReview: "Set in a converted 19th-century watch house, this Bermondsey gem is as much about the architecture as the coffee. The original building has been lovingly restored with floor-to-ceiling windows flooding the space with light. Their house roast is smooth and approachable, making it a favorite for both specialty aficionados and those newer to good coffee. Locals on Reddit describe it as their living room away from home.",
     sentimentTags: ["Stunning architecture", "Great light", "Welcoming to all", "Bermondsey gem"],
     nearestTransport: ["London Bridge (7 min)", "Bermondsey (5 min)"],
+    verification: { totalLocations: 5, googleRating: 4.3, hasFullInfo: true },
   },
   {
     id: "climpson-sons",
