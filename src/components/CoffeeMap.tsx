@@ -1,11 +1,13 @@
-import { useCallback, useMemo, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { useMemo } from "react";
+import { MapContainer, TileLayer, Marker, Popup, useMap, CircleMarker } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { coffeeShops, CoffeeShop } from "@/data/coffeeShops";
+import { CoffeeShop } from "@/data/coffeeShops";
 import { ShopPreviewCard } from "./ShopPreviewCard";
 
-const LONDON_CENTER: [number, number] = [51.515, -0.09];
+/** Test location: Borough / South Bank */
+const USER_LOCATION: [number, number] = [51.5035, -0.0890];
+const MAP_CENTER: [number, number] = USER_LOCATION;
 
 function createPinIcon(active: boolean) {
   const color = active ? "#FF3008" : "#737373";
@@ -34,21 +36,13 @@ interface CoffeeMapProps {
   onSelectShop: (id: string | null) => void;
 }
 
-function MapUpdater({ center }: { center: [number, number] }) {
-  const map = useMap();
-  useMemo(() => {
-    map.setView(center, map.getZoom(), { animate: true });
-  }, [center]);
-  return null;
-}
-
 export function CoffeeMap({ filteredShops, selectedShop, onSelectShop }: CoffeeMapProps) {
   const defaultIcon = useMemo(() => createPinIcon(false), []);
   const activeIcon = useMemo(() => createPinIcon(true), []);
 
   return (
     <MapContainer
-      center={LONDON_CENTER}
+      center={MAP_CENTER}
       zoom={13}
       className="h-full w-full"
       zoomControl={false}
@@ -58,6 +52,23 @@ export function CoffeeMap({ filteredShops, selectedShop, onSelectShop }: CoffeeM
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>'
       />
+
+      {/* User location */}
+      <CircleMarker
+        center={USER_LOCATION}
+        radius={8}
+        pathOptions={{
+          fillColor: "hsl(217, 91%, 60%)",
+          fillOpacity: 1,
+          color: "white",
+          weight: 3,
+        }}
+      >
+        <Popup>
+          <div className="text-xs font-medium p-1">📍 You are here</div>
+        </Popup>
+      </CircleMarker>
+
       {filteredShops.map((shop) => (
         <Marker
           key={shop.id}
