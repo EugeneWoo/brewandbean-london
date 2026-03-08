@@ -52,21 +52,27 @@ export function ShopInfoCard({ shop }: ShopInfoCardProps) {
 
       {/* Contact links */}
       <div className="flex flex-wrap gap-2 pt-1">
-        <Button variant="outline" size="sm" className="gap-1.5 text-xs" asChild>
-          <a href={`tel:${shop.phone}`}>
-            <Phone className="h-3.5 w-3.5" />{shop.phone}
-          </a>
-        </Button>
-        <Button variant="outline" size="sm" className="gap-1.5 text-xs" asChild>
-          <a href={shop.website} target="_blank" rel="noopener">
-            <Globe className="h-3.5 w-3.5" />Website<ExternalLink className="h-3 w-3" />
-          </a>
-        </Button>
-        <Button variant="outline" size="sm" className="gap-1.5 text-xs" asChild>
-          <a href={`https://instagram.com/${shop.instagram.replace("@", "")}`} target="_blank" rel="noopener">
-            <Instagram className="h-3.5 w-3.5" />{shop.instagram}
-          </a>
-        </Button>
+        {shop.phone && (
+          <Button variant="outline" size="sm" className="gap-1.5 text-xs" asChild>
+            <a href={`tel:${shop.phone}`}>
+              <Phone className="h-3.5 w-3.5" />{shop.phone}
+            </a>
+          </Button>
+        )}
+        {shop.website && (
+          <Button variant="outline" size="sm" className="gap-1.5 text-xs" asChild>
+            <a href={shop.website} target="_blank" rel="noopener">
+              <Globe className="h-3.5 w-3.5" />Website<ExternalLink className="h-3 w-3" />
+            </a>
+          </Button>
+        )}
+        {shop.instagram && (
+          <Button variant="outline" size="sm" className="gap-1.5 text-xs" asChild>
+            <a href={`https://instagram.com/${shop.instagram.replace("@", "")}`} target="_blank" rel="noopener">
+              <Instagram className="h-3.5 w-3.5" />{shop.instagram}
+            </a>
+          </Button>
+        )}
       </div>
     </Card>
   );
