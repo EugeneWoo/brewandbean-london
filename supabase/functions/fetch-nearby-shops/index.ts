@@ -40,22 +40,33 @@ function normalize(s: string): string {
 }
 
 // Google Place types that indicate the venue is NOT a standalone coffee shop
+// IMPORTANT: avoid overly broad types like "store", "point_of_interest",
+// "establishment", "food" — Google applies these to almost every coffee shop.
 const NON_STANDALONE_TYPES = [
-  "restaurant", "bar", "night_club", "pub",
-  "clothing_store", "shoe_store", "store", "shopping_mall", "department_store",
-  "boutique", "gift_shop", "book_store", "furniture_store",
+  // Hospitality / nightlife
+  "bar", "night_club", "pub",
+  // Retail (specific, not generic "store")
+  "clothing_store", "shoe_store", "shopping_mall", "department_store",
+  "furniture_store", "hardware_store", "electronics_store",
+  // Accommodation
   "hotel", "lodging", "motel", "resort_hotel",
-  "museum", "art_gallery", "tourist_attraction", "amusement_park",
-  "park", "national_park", "campground",
+  // Cultural / tourism
+  "museum", "art_gallery", "amusement_park",
+  // Outdoors
+  "national_park", "campground",
+  // Health / wellness
   "gym", "spa", "beauty_salon", "hair_care",
   "hospital", "pharmacy", "doctor",
+  // Religious
   "church", "mosque", "synagogue", "hindu_temple",
+  // Education
   "library", "school", "university",
-  "supermarket", "grocery_store", "convenience_store",
+  // Grocery
+  "supermarket", "grocery_store",
+  // Automotive
   "gas_station", "car_dealer", "car_repair",
+  // Government / NGO
   "non_governmental_organization", "local_government_office",
-  "meal_delivery", "meal_takeaway",
-  "canteen", "food_court",
 ];
 
 function isLikelyCoffeeShop(name: string, types: string[] = []): boolean {
@@ -63,7 +74,15 @@ function isLikelyCoffeeShop(name: string, types: string[] = []): boolean {
   if (EXCLUDED_NAMES.some((ex) => norm.includes(ex))) return false;
 
   // Exclude venues whose Google types indicate they're not standalone coffee shops
-  if (NON_STANDALONE_TYPES.some((t) => types.includes(t))) return false;
+  const disqualifyingType = NON_STANDALONE_TYPES.find((t) => types.includes(t));
+  if (disqualifyingType) {
+    console.log(`Excluded "${name}" — type: ${disqualifyingType}`);
+    return false;
+  }
+
+  // Exclude non-coffee venues by name hints
+  const nonCoffeeNameHints = ["canteen", "buffet", "bar & grill"];
+  if (nonCoffeeNameHints.some((h) => norm.includes(h))) return false;
 
   return true;
 }
@@ -203,6 +222,12 @@ Deno.serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
+    // DEBUG: log raw results
+    console.log(`Raw places count: ${(data.places || []).length}`);
+    (data.places || []).forEach((p: any) => {
+      console.log(`  "${p.displayName?.text}" rating=${p.rating} types=[${(p.types || []).join(",")}]`);
+    });
 
     const shops = (data.places || [])
       .filter((place: any) => {
