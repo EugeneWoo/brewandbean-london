@@ -321,6 +321,24 @@ export const coffeeShops: CoffeeShop[] = [
 
   // ── Islington / Angel ─────────────────────────────────────
   {
+    id: "pophams-islington",
+    name: "Pophams",
+    address: "197 Richmond Road, E8 3NJ",
+    neighborhood: "Islington",
+    lat: 51.5363, lng: -0.0609,
+    image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&h=400&fit=crop",
+    photos: ["https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&h=400&fit=crop"],
+    roaster: "Assembly Coffee", phone: "+44 20 7241 7657",
+    website: "https://pophamsbakery.com", instagram: "@pophamsbakery",
+    isOpen: true,
+    hours: { Mon: "8:00–16:00", Tue: "8:00–16:00", Wed: "8:00–16:00", Thu: "8:00–16:00", Fri: "8:00–16:00", Sat: "8:30–16:30", Sun: "8:30–16:30" },
+    attributes: { kidsFriendly: true, laptopFriendly: false, sitIn: true, foodMenu: true, opensEarly: true, opensLate: false, specialtyCoffee: true, dogFriendly: false },
+    communityReview: "Legendary for their flaky, creative pastries — the pepperoni pizza croissant is iconic. The coffee programme is equally serious with Assembly beans. Regularly cited as one of London's best bakery-cafés. Expect a queue at weekends.",
+    sentimentTags: ["Iconic pastries", "Pizza croissant", "Worth the queue", "Top-tier bakery"],
+    nearestTransport: ["Angel (6 min)", "Highbury & Islington (10 min)"],
+    verification: { totalLocations: 3, googleRating: 4.6, hasFullInfo: true },
+  },
+  {
     id: "campania-angel",
     name: "Campania & Jones",
     address: "23 Ezra Street, E2 7RH",
