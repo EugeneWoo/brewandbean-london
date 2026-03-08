@@ -5,6 +5,21 @@ const EXCLUDED_CHAINS = [
   "caffè nero", "coffee republic", "wild bean cafe",
 ];
 
+export interface RedditReview {
+  /** The subreddit source, e.g. "r/pourover" */
+  subreddit: string;
+  /** Reddit username */
+  author: string;
+  /** The review quote */
+  quote: string;
+  /** Approximate date of the post */
+  date: string;
+  /** Upvote score */
+  score: number;
+  /** Link to the thread */
+  threadUrl: string;
+}
+
 export interface VerificationInfo {
   /** Total number of locations this brand operates */
   totalLocations: number;
