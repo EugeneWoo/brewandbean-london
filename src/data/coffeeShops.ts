@@ -1,3 +1,19 @@
+/** Chains that are excluded from "Independent Verified" status */
+const EXCLUDED_CHAINS = [
+  "costa", "caffe nero", "nero", "starbucks", "gails", "gail's",
+  "blank street", "black sheep", "pret", "pret a manger", "greggs",
+  "caffè nero", "coffee republic", "wild bean cafe",
+];
+
+export interface VerificationInfo {
+  /** Total number of locations this brand operates */
+  totalLocations: number;
+  /** Average Google Places star rating (1–5) */
+  googleRating: number;
+  /** Whether sufficient attribute info is available (hours, wifi, food, pet/kids/laptop) */
+  hasFullInfo: boolean;
+}
+
 export interface CoffeeShop {
   id: string;
   name: string;
@@ -27,6 +43,26 @@ export interface CoffeeShop {
   communityReview: string;
   sentimentTags: string[];
   nearestTransport: string[];
+  verification: VerificationInfo;
+}
+
+/**
+ * Determines whether a shop qualifies as "Independent Verified":
+ * 1. Not a national chain
+ * 2. Has ≤ 5 locations
+ * 3. Google Places rating ≥ 4.0
+ * 4. Sufficient info about the location
+ */
+export function isIndependentVerified(shop: CoffeeShop): boolean {
+  const nameLower = shop.name.toLowerCase();
+  const isChain = EXCLUDED_CHAINS.some(
+    (chain) => nameLower.includes(chain)
+  );
+  if (isChain) return false;
+  if (shop.verification.totalLocations > 5) return false;
+  if (shop.verification.googleRating < 4.0) return false;
+  if (!shop.verification.hasFullInfo) return false;
+  return true;
 }
 
 export const coffeeShops: CoffeeShop[] = [
@@ -52,6 +88,7 @@ export const coffeeShops: CoffeeShop[] = [
     communityReview: "A Borough Market institution. Locals and coffee pilgrims alike queue patiently for what many consider London's finest flat white. The beans are roasted in-house and the single-origin filter options rotate seasonally. Reddit users frequently mention the communal wooden tables as a unique touch, though laptop use is discouraged. Expect a queue on weekends—regulars say it's absolutely worth the wait.",
     sentimentTags: ["Exceptional espresso", "Worth the queue", "Communal seating", "Single-origin gems"],
     nearestTransport: ["London Bridge (2 min)", "Borough (5 min)"],
+    verification: { totalLocations: 3, googleRating: 4.5, hasFullInfo: true },
   },
   {
     id: "prufrock-leather-lane",
@@ -75,6 +112,7 @@ export const coffeeShops: CoffeeShop[] = [
     communityReview: "Founded by a World Barista Champion, Prufrock is where London's specialty coffee movement truly flourished. The spacious Leather Lane location offers excellent natural light and a welcoming atmosphere for both quick espressos and longer laptop sessions. Google reviewers consistently praise the exceptional pour-over menu and knowledgeable staff who genuinely love coffee.",
     sentimentTags: ["World-class baristas", "Pour-over excellence", "Laptop friendly", "Great natural light"],
     nearestTransport: ["Chancery Lane (3 min)", "Farringdon (5 min)"],
+    verification: { totalLocations: 1, googleRating: 4.6, hasFullInfo: true },
   },
   {
     id: "ozone-shoreditch",
@@ -98,6 +136,7 @@ export const coffeeShops: CoffeeShop[] = [
     communityReview: "A New Zealand import that has become a Shoreditch cornerstone. The converted warehouse space is stunning—exposed brick, industrial beams, and the roaster visible through glass. The brunch menu is destination-worthy, and Reddit users rave about the cold brew and seasonal espresso blends. Evenings bring a wine list and relaxed atmosphere. Dog owners particularly love the welcoming policy.",
     sentimentTags: ["Stunning space", "Brunch destination", "Dog friendly", "Evening drinks"],
     nearestTransport: ["Old Street (4 min)", "Shoreditch High Street (6 min)"],
+    verification: { totalLocations: 2, googleRating: 4.4, hasFullInfo: true },
   },
   {
     id: "workshop-marylebone",
@@ -122,6 +161,7 @@ export const coffeeShops: CoffeeShop[] = [
     communityReview: "Workshop's Fitzrovia outpost is a masterclass in minimalist café design. The focus here is squarely on the coffee—direct trade beans roasted at their Bethnal Green facility with meticulous care. Reviewers on Google praise the consistently excellent espresso and the calm, focused atmosphere perfect for work. The pastry selection from local bakeries is a lovely complement.",
     sentimentTags: ["Minimalist design", "Direct trade", "Great for work", "Exceptional pastries"],
     nearestTransport: ["Goodge Street (2 min)", "Oxford Circus (5 min)"],
+    verification: { totalLocations: 5, googleRating: 4.3, hasFullInfo: true },
   },
   {
     id: "rosslyn-city",
@@ -145,6 +185,7 @@ export const coffeeShops: CoffeeShop[] = [
     communityReview: "A City oasis tucked away from the financial district chaos. Rosslyn sources beans from The Barn in Berlin, producing some of the most refined light-roast espresso in London. Google reviewers consistently mention the exceptionally friendly staff and the compact but beautifully designed interior. Perfect for a quick, excellent coffee between meetings.",
     sentimentTags: ["Light roast specialists", "Friendly staff", "City escape", "Beautiful interior"],
     nearestTransport: ["Mansion House (2 min)", "Cannon Street (3 min)"],
+    verification: { totalLocations: 3, googleRating: 4.5, hasFullInfo: true },
   },
   {
     id: "watchhouse-bermondsey",
@@ -168,6 +209,7 @@ export const coffeeShops: CoffeeShop[] = [
     communityReview: "Set in a converted 19th-century watch house, this Bermondsey gem is as much about the architecture as the coffee. The original building has been lovingly restored with floor-to-ceiling windows flooding the space with light. Their house roast is smooth and approachable, making it a favorite for both specialty aficionados and those newer to good coffee. Locals on Reddit describe it as their living room away from home.",
     sentimentTags: ["Stunning architecture", "Great light", "Welcoming to all", "Bermondsey gem"],
     nearestTransport: ["London Bridge (7 min)", "Bermondsey (5 min)"],
+    verification: { totalLocations: 5, googleRating: 4.3, hasFullInfo: true },
   },
   {
     id: "climpson-sons",
@@ -191,6 +233,7 @@ export const coffeeShops: CoffeeShop[] = [
     communityReview: "Broadway Market's original specialty coffee pioneers, Climpson & Sons helped put Hackney on the coffee map over a decade ago. Their single-origin filter coffee is consistently outstanding, and Saturday mornings during the market are a vibrant community experience. Google reviewers love the relaxed atmosphere and the way staff remember regulars' orders. The outdoor seating is prime people-watching territory.",
     sentimentTags: ["Broadway Market icon", "Community hub", "Outdoor seating", "Single-origin filter"],
     nearestTransport: ["London Fields (5 min)", "Haggerston (8 min)"],
+    verification: { totalLocations: 1, googleRating: 4.4, hasFullInfo: true },
   },
   {
     id: "origin-shoreditch",
@@ -214,5 +257,6 @@ export const coffeeShops: CoffeeShop[] = [
     communityReview: "Cornwall's finest export to London's coffee scene. Origin brings a distinct approach—beans roasted at their Cornish HQ with a focus on traceability and direct farmer relationships. The Shoreditch space is sleek and modern with excellent coffee equipment on full display. Reddit users particularly recommend the tasting flights for exploring different origins side by side.",
     sentimentTags: ["Cornwall roasted", "Tasting flights", "Direct trade", "Sleek space"],
     nearestTransport: ["Old Street (5 min)", "Shoreditch High Street (4 min)"],
+    verification: { totalLocations: 3, googleRating: 4.5, hasFullInfo: true },
   },
 ];
