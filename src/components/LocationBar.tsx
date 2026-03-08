@@ -88,7 +88,7 @@ export function LocationBar({ locationState }: LocationBarProps) {
               Use my location
             </DropdownMenuItem>
           )}
-          {AREA_PRESETS.map((area) => (
+          {areaPresets.map((area) => (
             <DropdownMenuItem
               key={area.label}
               onClick={() => setManualLocation(area.lat, area.lng)}
