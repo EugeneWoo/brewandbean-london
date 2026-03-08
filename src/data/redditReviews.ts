@@ -48,7 +48,7 @@ export const redditReviewsByShop: Record<string, RedditReview[]> = {
  * r/pourover, r/london, r/Coffee, and r/JamesHoffmann.
  */
 export const redditSentimentByShop: Record<string, { summary: string; sources: string[] }> = {
-  "monmouth-bermondsey": {
+  "monmouth-borough": {
     summary: "Frequently mentioned across r/london and r/Coffee as a Borough Market essential. Redditors consistently praise the single-origin filter and communal seating, though the weekend queue and no-laptop policy are recurring themes.",
     sources: [
       "https://www.reddit.com/r/london/comments/195no7u/specialty_coffee_shops_in_london/",
