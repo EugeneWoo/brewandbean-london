@@ -127,9 +127,9 @@ export function CoffeeMap({ filteredShops, selectedShop, onSelectShop, userLocat
         );
       })}
 
-      {/* User location — outer pulse ring + bright blue dot */}
+      {/* User location — rendered AFTER markers so it stays on top */}
       {userLocation && (
-        <>
+        <Pane name="user-location" style={{ zIndex: 650 }}>
           <CircleMarker
             center={[userLocation.lat, userLocation.lng]}
             radius={20}
@@ -155,7 +155,7 @@ export function CoffeeMap({ filteredShops, selectedShop, onSelectShop, userLocat
               <div className="text-xs font-medium p-1">📍 You are here</div>
             </Popup>
           </CircleMarker>
-        </>
+        </Pane>
       )}
     </MapContainer>
   );
