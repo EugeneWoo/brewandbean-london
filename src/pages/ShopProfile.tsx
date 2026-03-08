@@ -169,8 +169,8 @@ export default function ShopProfile() {
             </p>
           </div>
 
-          {/* Reddit Reviews */}
-          {redditReviews.length > 0 && (
+          {/* Reddit Reviews & Sentiment */}
+          {(redditReviews.length > 0 || redditSentiment) && (
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <MessageSquare className="h-5 w-5 text-primary" />
@@ -208,10 +208,34 @@ export default function ShopProfile() {
                     </div>
                   </Card>
                 ))}
+
+                {redditSentiment && (
+                  <Card className="p-4 space-y-2.5 border-dashed border-border/60 bg-muted/20">
+                    <Badge variant="secondary" className="text-[10px]">
+                      Community sentiment
+                    </Badge>
+                    <p className="text-sm leading-relaxed text-muted-foreground">
+                      {redditSentiment.summary}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {redditSentiment.sources.map((url, i) => (
+                        <a
+                          key={i}
+                          href={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1 text-[11px] text-primary hover:underline"
+                        >
+                          Source {i + 1}
+                          <ArrowUpRight className="h-2.5 w-2.5" />
+                        </a>
+                      ))}
+                    </div>
+                  </Card>
+                )}
               </div>
             </div>
           )}
-
 
           <div className="space-y-3">
             <h2 className="font-heading text-xl">Shop Features</h2>
