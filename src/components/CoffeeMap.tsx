@@ -103,25 +103,6 @@ export function CoffeeMap({ filteredShops, selectedShop, onSelectShop, userLocat
       {/* Auto-fit to show user + shops */}
       {userLocation && <MapAutoFit center={[userLocation.lat, userLocation.lng]} shops={filteredShops} />}
 
-      {/* User location blue dot — rendered AFTER shop markers + high pane to stay on top */}
-      {userLocation && (
-        <CircleMarker
-          center={[userLocation.lat, userLocation.lng]}
-          radius={8}
-          pane="markerPane"
-          pathOptions={{
-            fillColor: "hsl(217, 91%, 60%)",
-            fillOpacity: 1,
-            color: "white",
-            weight: 3,
-          }}
-        >
-          <Popup>
-            <div className="text-xs font-medium p-1">📍 You are here</div>
-          </Popup>
-        </CircleMarker>
-      )}
-
       {filteredShops.map((shop) => {
         const buzz = hasRedditBuzz(shop.id);
         const icon = createPinIcon(
@@ -144,6 +125,24 @@ export function CoffeeMap({ filteredShops, selectedShop, onSelectShop, userLocat
           </Marker>
         );
       })}
+
+      {/* User location blue dot — rendered AFTER shop markers to stay on top */}
+      {userLocation && (
+        <CircleMarker
+          center={[userLocation.lat, userLocation.lng]}
+          radius={8}
+          pathOptions={{
+            fillColor: "hsl(217, 91%, 60%)",
+            fillOpacity: 1,
+            color: "white",
+            weight: 3,
+          }}
+        >
+          <Popup>
+            <div className="text-xs font-medium p-1">📍 You are here</div>
+          </Popup>
+        </CircleMarker>
+      )}
     </MapContainer>
   );
 }
