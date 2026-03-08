@@ -7,10 +7,9 @@ const EXCLUDED_CHAINS = [
   "caffè nero", "coffee republic", "wild bean cafe",
 ];
 
-/** Bakery/pastry/pretzel-primary brands excluded */
+/** Chain bakery/pastry shops excluded (indie bakery-cafés with specialty coffee are allowed) */
 const EXCLUDED_BAKERIES = [
-  "pophams", "ole & steen", "ole and steen", "paul", "pretzel",
-  "pasty", "cornish bakehouse",
+  "ole & steen", "ole and steen", "paul", "cornish bakehouse",
 ];
 
 export interface RedditReview {
