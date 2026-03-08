@@ -112,6 +112,7 @@ export const coffeeShops: CoffeeShop[] = [
     communityReview: "Founded by a World Barista Champion, Prufrock is where London's specialty coffee movement truly flourished. The spacious Leather Lane location offers excellent natural light and a welcoming atmosphere for both quick espressos and longer laptop sessions. Google reviewers consistently praise the exceptional pour-over menu and knowledgeable staff who genuinely love coffee.",
     sentimentTags: ["World-class baristas", "Pour-over excellence", "Laptop friendly", "Great natural light"],
     nearestTransport: ["Chancery Lane (3 min)", "Farringdon (5 min)"],
+    verification: { totalLocations: 1, googleRating: 4.6, hasFullInfo: true },
   },
   {
     id: "ozone-shoreditch",
