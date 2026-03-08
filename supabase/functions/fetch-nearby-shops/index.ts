@@ -10,6 +10,11 @@ const EXCLUDED_NAMES = [
   "gas station", "petrol", "supermarket", "marks & spencer", "m&s",
   "tesco", "sainsbury", "waitrose", "aldi", "lidl", "co-op",
   "premier inn", "travelodge", "holiday inn",
+  // Non-coffee themed shops
+  "chaii", "chai ", "chaiiwala", "bubble tea", "boba",
+  "turkish tea", "shisha", "hookah",
+  "asian dessert", "dessert bar", "ice cream",
+  "juice bar", "smoothie", "açaí",
 ];
 
 function gridKey(lat: number, lng: number): string {
