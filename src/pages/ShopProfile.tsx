@@ -1,56 +1,25 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { coffeeShops, isIndependentVerified } from "@/data/coffeeShops";
+import { coffeeShops } from "@/data/coffeeShops";
 import { redditReviewsByShop, redditSentimentByShop } from "@/data/redditReviews";
 import { AppHeader } from "@/components/AppHeader";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import {
-  ArrowLeft,
-  BadgeCheck,
-  MapPin,
-  Phone,
-  Globe,
-  Instagram,
-  ExternalLink,
-  Clock,
-  Coffee,
-  Laptop,
-  Users,
-  Dog,
-  UtensilsCrossed,
-  Armchair,
-  Sunrise,
-  Moon,
-  Navigation,
-  ChevronDown,
-  ChevronUp,
-  MessageSquare,
-  ArrowUpRight,
-  ThumbsUp,
-} from "lucide-react";
-import { useState } from "react";
-
-const attributeConfig = [
-  { key: "specialtyCoffee", label: "Specialty Coffee", icon: Coffee },
-  { key: "laptopFriendly", label: "Laptop Friendly", icon: Laptop },
-  { key: "kidsFriendly", label: "Kids Friendly", icon: Users },
-  { key: "dogFriendly", label: "Dog Friendly", icon: Dog },
-  { key: "foodMenu", label: "Food Menu", icon: UtensilsCrossed },
-  { key: "sitIn", label: "Sit-in Space", icon: Armchair },
-  { key: "opensEarly", label: "Opens Early", icon: Sunrise },
-  { key: "opensLate", label: "Opens Late", icon: Moon },
-];
+import { ArrowLeft, Coffee } from "lucide-react";
+import { ShopHero } from "@/components/shop/ShopHero";
+import { ShopInfoCard } from "@/components/shop/ShopInfoCard";
+import { ShopFeatures } from "@/components/shop/ShopFeatures";
+import { ShopCommunity } from "@/components/shop/ShopCommunity";
+import { ShopRedditReviews } from "@/components/shop/ShopRedditReviews";
+import { ShopPhotos } from "@/components/shop/ShopPhotos";
+import { ShopTransport } from "@/components/shop/ShopTransport";
 
 export default function ShopProfile() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [showAllHours, setShowAllHours] = useState(false);
-  const redditReviews = id ? redditReviewsByShop[id] || [] : [];
-  const redditSentiment = id ? redditSentimentByShop[id] : undefined;
 
   const shop = coffeeShops.find((s) => s.id === id);
+  const redditReviews = id ? redditReviewsByShop[id] || [] : [];
+  const redditSentiment = id ? redditSentimentByShop[id] : undefined;
 
   if (!shop) {
     return (
@@ -67,16 +36,18 @@ export default function ShopProfile() {
     );
   }
 
-  const today = new Date().toLocaleDateString("en-US", { weekday: "short" });
-  const todayHours = shop.hours[today] || "Hours unavailable";
-
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <AppHeader />
 
       {/* Back nav */}
       <div className="px-4 py-2 border-b border-border">
-        <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground -ml-2" onClick={() => navigate("/")}>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="gap-1.5 text-muted-foreground -ml-2"
+          onClick={() => navigate("/")}
+        >
           <ArrowLeft className="h-4 w-4" />
           Back to map
         </Button>
@@ -88,24 +59,7 @@ export default function ShopProfile() {
         transition={{ duration: 0.4 }}
         className="flex-1"
       >
-        {/* Hero */}
-        <div className="relative">
-          <img src={shop.image} alt={shop.name} className="w-full h-56 md:h-72 object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent" />
-          <div className="absolute bottom-4 left-4 right-4">
-            {isIndependentVerified(shop) && (
-              <Badge className="bg-success text-success-foreground gap-1 mb-2">
-                <BadgeCheck className="h-3.5 w-3.5" />
-                Independent Verified
-              </Badge>
-            )}
-            <h1 className="font-heading text-2xl md:text-3xl text-card">{shop.name}</h1>
-            <div className="flex items-center gap-1.5 mt-1 text-card/80 text-sm">
-              <MapPin className="h-3.5 w-3.5" />
-              {shop.address} · {shop.neighborhood}
-            </div>
-          </div>
-        </div>
+        <ShopHero shop={shop} />
 
         <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
           {/* Status */}
@@ -119,182 +73,12 @@ export default function ShopProfile() {
             )}
           </div>
 
-          {/* Essential Info */}
-          <Card className="p-4 space-y-3">
-            <div className="flex items-center gap-2 text-sm cursor-pointer" onClick={() => setShowAllHours(!showAllHours)}>
-              <Clock className="h-4 w-4 text-muted-foreground" />
-              <span>Today: {todayHours}</span>
-              {showAllHours ? <ChevronUp className="h-4 w-4 ml-auto text-muted-foreground" /> : <ChevronDown className="h-4 w-4 ml-auto text-muted-foreground" />}
-            </div>
-            {showAllHours && (
-              <div className="pl-6 space-y-1 text-sm text-muted-foreground">
-                {Object.entries(shop.hours).map(([day, hours]) => (
-                  <div key={day} className="flex justify-between">
-                    <span className={day === today ? "font-semibold text-foreground" : ""}>{day}</span>
-                    <span className={day === today ? "font-semibold text-foreground" : ""}>{hours}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-            {shop.roaster && (
-              <div className="flex items-center gap-2 text-sm">
-                <Coffee className="h-4 w-4 text-muted-foreground" />
-                <span>Roaster: <strong>{shop.roaster}</strong></span>
-              </div>
-            )}
-            <div className="flex flex-wrap gap-2 pt-1">
-              <Button variant="outline" size="sm" className="gap-1.5 text-xs" asChild>
-                <a href={`tel:${shop.phone}`}><Phone className="h-3.5 w-3.5" />{shop.phone}</a>
-              </Button>
-              <Button variant="outline" size="sm" className="gap-1.5 text-xs" asChild>
-                <a href={shop.website} target="_blank" rel="noopener"><Globe className="h-3.5 w-3.5" />Website<ExternalLink className="h-3 w-3" /></a>
-              </Button>
-              <Button variant="outline" size="sm" className="gap-1.5 text-xs" asChild>
-                <a href={`https://instagram.com/${shop.instagram.replace("@", "")}`} target="_blank" rel="noopener"><Instagram className="h-3.5 w-3.5" />{shop.instagram}</a>
-              </Button>
-            </div>
-          </Card>
-
-          {/* Community Insights */}
-          <div className="space-y-3">
-            <h2 className="font-heading text-xl">Community Insights</h2>
-            <p className="text-sm leading-relaxed text-muted-foreground">{shop.communityReview}</p>
-            <div className="flex flex-wrap gap-1.5">
-              {shop.sentimentTags.map((tag) => (
-                <Badge key={tag} variant="secondary" className="text-xs font-normal">{tag}</Badge>
-              ))}
-            </div>
-            <p className="text-[11px] text-muted-foreground/70 italic">
-              Based on community reviews from Google, Reddit, and local recommendations
-            </p>
-          </div>
-
-          {/* Reddit Reviews & Sentiment */}
-          {(redditReviews.length > 0 || redditSentiment) && (
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <MessageSquare className="h-5 w-5 text-primary" />
-                <h2 className="font-heading text-xl">From Reddit</h2>
-              </div>
-              <div className="space-y-3">
-                {redditReviews.map((review, i) => (
-                  <Card key={i} className="p-4 space-y-2.5 border-border/60">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="text-[10px] font-mono border-primary/30 text-primary">
-                          {review.subreddit}
-                        </Badge>
-                        <span className="text-xs text-muted-foreground">u/{review.author}</span>
-                      </div>
-                      <span className="text-[11px] text-muted-foreground">{review.date}</span>
-                    </div>
-                    <p className="text-sm leading-relaxed text-muted-foreground italic">
-                      "{review.quote}"
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                        <ThumbsUp className="h-3 w-3" />
-                        <span>{review.score} upvotes</span>
-                      </div>
-                      <a
-                        href={review.threadUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-xs text-primary hover:underline"
-                      >
-                        View thread
-                        <ArrowUpRight className="h-3 w-3" />
-                      </a>
-                    </div>
-                  </Card>
-                ))}
-
-                {redditSentiment && (
-                  <Card className="p-4 space-y-2.5 border-dashed border-border/60 bg-muted/20">
-                    <Badge variant="secondary" className="text-[10px]">
-                      Community sentiment
-                    </Badge>
-                    <p className="text-sm leading-relaxed text-muted-foreground">
-                      {redditSentiment.summary}
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {redditSentiment.sources.map((url, i) => (
-                        <a
-                          key={i}
-                          href={url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-1 text-[11px] text-primary hover:underline"
-                        >
-                          Source {i + 1}
-                          <ArrowUpRight className="h-2.5 w-2.5" />
-                        </a>
-                      ))}
-                    </div>
-                  </Card>
-                )}
-              </div>
-            </div>
-          )}
-
-          <div className="space-y-3">
-            <h2 className="font-heading text-xl">Shop Features</h2>
-            <div className="grid grid-cols-2 gap-2">
-              {attributeConfig.map(({ key, label, icon: Icon }) => {
-                const has = shop.attributes[key as keyof typeof shop.attributes];
-                return (
-                  <div
-                    key={key}
-                    className={`flex items-center gap-2.5 p-3 rounded-lg border text-sm ${
-                      has ? "border-success/30 bg-success/5 text-foreground" : "border-border bg-muted/30 text-muted-foreground"
-                    }`}
-                  >
-                    <Icon className={`h-4 w-4 ${has ? "text-success" : ""}`} />
-                    {label}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Photos */}
-          <div className="space-y-3">
-            <h2 className="font-heading text-xl">Photos</h2>
-            <div className="flex gap-3 overflow-x-auto pb-2">
-              {shop.photos.map((photo, i) => (
-                <img
-                  key={i}
-                  src={photo}
-                  alt={`${shop.name} photo ${i + 1}`}
-                  className="h-40 w-56 rounded-lg object-cover shrink-0"
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Transport */}
-          <div className="space-y-3 pb-8">
-            <h2 className="font-heading text-xl">Getting There</h2>
-            <div className="space-y-2">
-              {shop.nearestTransport.map((t) => (
-                <div key={t} className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Navigation className="h-4 w-4" />
-                  {t}
-                </div>
-              ))}
-            </div>
-            <Button variant="outline" className="gap-2" asChild>
-              <a
-                href={`https://www.google.com/maps/dir/?api=1&destination=${shop.lat},${shop.lng}`}
-                target="_blank"
-                rel="noopener"
-              >
-                <MapPin className="h-4 w-4" />
-                Get Directions
-                <ExternalLink className="h-3.5 w-3.5" />
-              </a>
-            </Button>
-          </div>
+          <ShopInfoCard shop={shop} />
+          <ShopCommunity communityReview={shop.communityReview} sentimentTags={shop.sentimentTags} />
+          <ShopRedditReviews reviews={redditReviews} sentiment={redditSentiment} />
+          <ShopFeatures attributes={shop.attributes} />
+          <ShopPhotos photos={shop.photos} shopName={shop.name} />
+          <ShopTransport nearestTransport={shop.nearestTransport} lat={shop.lat} lng={shop.lng} />
         </div>
       </motion.div>
     </div>
