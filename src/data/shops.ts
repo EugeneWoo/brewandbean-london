@@ -47,6 +47,26 @@ export const coffeeShops: CoffeeShop[] = [
 
   // ── Clerkenwell / Farringdon ──────────────────────────────
   {
+    id: "devotion-clerkenwell",
+    name: "Devotion Coffee",
+    address: "35 Rosebery Avenue, EC1R 4SH",
+    neighborhood: "Clerkenwell",
+    lat: 51.52370, lng: -0.10960,
+    image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&h=400&fit=crop",
+    photos: ["https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&h=400&fit=crop"],
+    roaster: "Devotion (own roast)", phone: "",
+    website: "", instagram: "@devotioncoffee",
+    isOpen: true,
+    hours: { Mon: "7:30–17:00", Tue: "7:30–17:00", Wed: "7:30–17:00", Thu: "7:30–17:00", Fri: "7:30–17:00", Sat: "9:00–17:00", Sun: "9:00–16:00" },
+    attributes: { kidsFriendly: true, laptopFriendly: true, sitIn: true, foodMenu: true, opensEarly: true, opensLate: false, specialtyCoffee: true, dogFriendly: true },
+    communityReview: "A Clerkenwell favourite known for exceptional specialty coffee and a warm, welcoming atmosphere. Consistently rated among the best in the area with a loyal local following.",
+    sentimentTags: ["Outstanding coffee", "Clerkenwell gem", "Friendly staff", "Great pastries"],
+    nearestTransport: ["Farringdon (5 min)", "Angel (8 min)"],
+    verification: { totalLocations: 1, googleRating: 4.9, hasFullInfo: true },
+  },
+
+  // ── Clerkenwell / Farringdon ──────────────────────────────
+  {
     id: "prufrock-leather-lane",
     name: "Prufrock Coffee",
     address: "23-25 Leather Lane, EC1N 7TE",
