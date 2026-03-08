@@ -1,4 +1,4 @@
-import { CoffeeShop } from "@/data/coffeeShops";
+import { CoffeeShop, isIndependentVerified } from "@/data/coffeeShops";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BadgeCheck, MapPin } from "lucide-react";
@@ -23,10 +23,12 @@ export function ShopPreviewCard({ shop }: ShopPreviewCardProps) {
           <h3 className="font-body font-semibold text-sm leading-tight text-foreground">
             {shop.name}
           </h3>
-          <Badge variant="outline" className="shrink-0 text-[10px] border-success text-success bg-success/10 gap-0.5">
-            <BadgeCheck className="h-3 w-3" />
-            Verified
-          </Badge>
+          {isIndependentVerified(shop) && (
+            <Badge variant="outline" className="shrink-0 text-[10px] border-success text-success bg-success/10 gap-0.5">
+              <BadgeCheck className="h-3 w-3" />
+              Verified
+            </Badge>
+          )}
         </div>
         <div className="flex items-center gap-1 text-muted-foreground text-xs">
           <MapPin className="h-3 w-3" />
