@@ -61,9 +61,9 @@ export function NearbyShopCard({ shop, rank, distanceKm, onClick }: NearbyShopCa
           <span className="inline-flex items-center gap-0.5 font-medium text-foreground">
             <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
             {shop.verification.googleRating.toFixed(1)}
-            {shop.totalRatings > 0 && (
+            {(shop as any).totalRatings > 0 && (
               <span className="text-muted-foreground ml-0.5">
-                ({shop.totalRatings > 999 ? `${(shop.totalRatings / 1000).toFixed(1)}k` : shop.totalRatings})
+                ({(shop as any).totalRatings > 999 ? `${((shop as any).totalRatings / 1000).toFixed(1)}k` : (shop as any).totalRatings})
               </span>
             )}
           </span>

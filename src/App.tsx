@@ -18,6 +18,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/nearby" element={<NearbyList />} />
           <Route path="/shop/:id" element={<ShopProfile />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
