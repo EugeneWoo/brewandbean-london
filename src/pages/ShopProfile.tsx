@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { coffeeShops, isIndependentVerified } from "@/data/coffeeShops";
-import { redditReviewsByShop } from "@/data/redditReviews";
+import { redditReviewsByShop, redditSentimentByShop } from "@/data/redditReviews";
 import { AppHeader } from "@/components/AppHeader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
