@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { coffeeShops } from "@/data/coffeeShops";
+import { coffeeShops, isIndependentVerified } from "@/data/coffeeShops";
 import { AppHeader } from "@/components/AppHeader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
