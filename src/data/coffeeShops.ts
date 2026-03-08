@@ -185,6 +185,7 @@ export const coffeeShops: CoffeeShop[] = [
     communityReview: "A City oasis tucked away from the financial district chaos. Rosslyn sources beans from The Barn in Berlin, producing some of the most refined light-roast espresso in London. Google reviewers consistently mention the exceptionally friendly staff and the compact but beautifully designed interior. Perfect for a quick, excellent coffee between meetings.",
     sentimentTags: ["Light roast specialists", "Friendly staff", "City escape", "Beautiful interior"],
     nearestTransport: ["Mansion House (2 min)", "Cannon Street (3 min)"],
+    verification: { totalLocations: 3, googleRating: 4.5, hasFullInfo: true },
   },
   {
     id: "watchhouse-bermondsey",
