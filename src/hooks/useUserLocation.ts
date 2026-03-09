@@ -100,12 +100,14 @@ export function useUserLocation(): LocationState {
     watchIdRef.current = navigator.geolocation.watchPosition(
       (pos) => {
         console.log("[Location] Update:", pos.coords.latitude, pos.coords.longitude, "accuracy:", pos.coords.accuracy);
-        setLocation({
+        const loc: UserLocation = {
           lat: pos.coords.latitude,
           lng: pos.coords.longitude,
           source: "geolocation",
-        });
+        };
+        setLocation(loc);
         setStatus("granted");
+        setCachedLocation(loc, "granted");
         setError(null);
       },
       (err) => {
