@@ -133,8 +133,10 @@ export function useUserLocation(): LocationState {
   }, []);
 
   const setManualLocation = useCallback((lat: number, lng: number) => {
-    setLocation({ lat, lng, source: "manual" });
+    const loc: UserLocation = { lat, lng, source: "manual" };
+    setLocation(loc);
     setStatus("manual");
+    setCachedLocation(loc, "manual");
     setError(null);
   }, []);
 
