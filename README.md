@@ -1,73 +1,82 @@
-# Welcome to your Lovable project
+# Brew & Bean London
 
-## Project info
+A location-based web app for discovering independent specialty coffee shops in London. Find the best independent cafes near you, filtered by your preferences, with community reviews and real-time data.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Features
 
-## How can I edit this code?
+- **Interactive Map** — Leaflet map with coffee shop markers, Reddit buzz indicators, and live user location
+- **Location Services** — Browser geolocation with live tracking, manual location fallback, and walking distance calculation (~1.2km radius)
+- **Shop Filters** — Open Now, Kids Friendly, Sit-in Space, Food Menu, Opens Early/Late, Dog Friendly
+- **Two Views** — Map view for exploration, list view ranked by distance + rating
+- **Shop Profiles** — Full details including hours, photos, transport links, and Reddit community reviews
+- **Curated + Live Data** — ~50 hand-picked independent London shops merged with real-time Google Places results, deduplicated and quality-filtered (4.5+ rating, independent only)
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+- **Frontend:** React 18, TypeScript, Vite, Tailwind CSS, shadcn/ui, Framer Motion
+- **Maps:** Leaflet + react-leaflet with OpenStreetMap tiles
+- **Backend:** Supabase Edge Functions (Google Places API proxy only — no database)
+- **Data:** Local TypeScript data files (curated shops, Reddit reviews), Google Places API via Edge Function
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+**Prerequisites:** Node.js + npm
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Install dependencies
+npm install
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start development server (http://localhost:8080)
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Environment Variables
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+The app uses a Supabase Edge Function as a proxy to the Google Places API. Create a `.env` file:
 
-**Use GitHub Codespaces**
+```
+VITE_SUPABASE_URL=https://<your-project>.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=<your-anon-key>
+VITE_SUPABASE_PROJECT_ID=<your-project-id>
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+> Note: Supabase is used solely to host the `fetch-nearby-shops` Edge Function. There is no database — all shop data is stored in local TypeScript files.
 
-## What technologies are used for this project?
+### Other Commands
 
-This project is built with:
+```sh
+npm run build      # Production build
+npm run preview    # Preview production build
+npm test           # Run tests (Vitest)
+npm run lint       # Run ESLint
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Project Structure
 
-## How can I deploy this project?
+```
+src/
+├── components/       # React components (map, filters, cards, shop profile)
+├── pages/            # Route pages (Home, NearbyList, ShopProfile, NotFound)
+├── hooks/            # Custom hooks (location, shop data, filters)
+├── data/             # Curated shop data and Reddit reviews
+└── integrations/     # Supabase client and types
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+supabase/
+└── functions/
+    └── fetch-nearby-shops/   # Google Places API wrapper with caching & deduplication
+```
 
-## Can I connect a custom domain to my Lovable project?
+## Routes
 
-Yes, you can!
+| Route | Description |
+|-------|-------------|
+| `/` | Map view with nearby shops |
+| `/nearby` | List view of top 10 nearest shops |
+| `/shop/:id` | Individual shop profile |
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## Data Sources
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- **Local data files** — ~50 vetted independent London coffee shops hardcoded in `src/data/shops.ts` with attributes, hours, and photos
+- **Google Places API** — Real-time nearby results fetched via Supabase Edge Function, filtered for quality (4.5+ rating, non-chain), merged with local data at runtime
+- **Reddit reviews** — Pre-scraped community sentiment data in `src/data/redditReviews.ts`
+- **OpenStreetMap** — Map tiles (no API key required)
