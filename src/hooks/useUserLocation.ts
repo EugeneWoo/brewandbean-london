@@ -52,9 +52,32 @@ function countNearby(lat: number, lng: number): number {
   ).length;
 }
 
+const CACHE_KEY = "bb_user_location";
+const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
+
+function getCachedLocation(): { location: UserLocation; status: LocationState["status"] } | null {
+  try {
+    const raw = sessionStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    const cached = JSON.parse(raw);
+    if (Date.now() - cached.timestamp > CACHE_TTL_MS) {
+      sessionStorage.removeItem(CACHE_KEY);
+      return null;
+    }
+    return { location: cached.location, status: cached.status };
+  } catch {
+    return null;
+  }
+}
+
+function setCachedLocation(location: UserLocation, status: LocationState["status"]) {
+  sessionStorage.setItem(CACHE_KEY, JSON.stringify({ location, status, timestamp: Date.now() }));
+}
+
 export function useUserLocation(): LocationState {
-  const [location, setLocation] = useState<UserLocation | null>(null);
-  const [status, setStatus] = useState<LocationState["status"]>("denied");
+  const cached = getCachedLocation();
+  const [location, setLocation] = useState<UserLocation | null>(cached?.location ?? null);
+  const [status, setStatus] = useState<LocationState["status"]>(cached?.status ?? "denied");
   const [error, setError] = useState<string | null>(null);
 
   const watchIdRef = useRef<number | null>(null);
