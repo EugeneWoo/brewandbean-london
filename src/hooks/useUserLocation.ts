@@ -77,7 +77,7 @@ function setCachedLocation(location: UserLocation, status: LocationState["status
 export function useUserLocation(): LocationState {
   const cached = getCachedLocation();
   const [location, setLocation] = useState<UserLocation | null>(cached?.location ?? null);
-  const [status, setStatus] = useState<LocationState["status"]>(cached?.status ?? "denied");
+  const [status, setStatus] = useState<LocationState["status"]>(cached?.status ?? "loading");
   const [error, setError] = useState<string | null>(null);
 
   const watchIdRef = useRef<number | null>(null);
@@ -131,6 +131,13 @@ export function useUserLocation(): LocationState {
       }
     };
   }, []);
+
+  // Auto-request geolocation on mount if no cached location
+  useEffect(() => {
+    if (!cached) {
+      requestGeolocation();
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const setManualLocation = useCallback((lat: number, lng: number) => {
     const loc: UserLocation = { lat, lng, source: "manual" };
