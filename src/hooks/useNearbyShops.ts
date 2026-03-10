@@ -24,14 +24,17 @@ export function useNearbyShops(userLocation: UserLocation | null): UseNearbyShop
     const key = `${(userLocation.lat * 200).toFixed(0)},${(userLocation.lng * 200).toFixed(0)}`;
     if (key === lastFetchKey.current) return;
 
+    console.log(`[NearbyShops] Fetching for key=${key} lat=${userLocation.lat} lng=${userLocation.lng}`);
+
     let cancelled = false;
     setLoading(true);
 
     (async () => {
       try {
-        const res = await fetch(
-          `${SUPABASE_URL}/functions/v1/fetch-nearby-shops`,
-          {
+        const url = `${SUPABASE_URL}/functions/v1/fetch-nearby-shops`;
+        console.log(`[NearbyShops] POST ${url}`);
+
+        const res = await fetch(url, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -44,21 +47,25 @@ export function useNearbyShops(userLocation: UserLocation | null): UseNearbyShop
 
         if (cancelled) return;
 
+        console.log(`[NearbyShops] Response status: ${res.status}`);
+
         if (!res.ok) {
-          console.error("fetch-nearby-shops HTTP error:", res.status);
-          setError("Could not load nearby shops");
+          const text = await res.text();
+          console.error(`[NearbyShops] HTTP error ${res.status}:`, text);
+          setError(`API error ${res.status}`);
           setLoading(false);
           return;
         }
 
         const data = await res.json();
+        console.log(`[NearbyShops] Got ${data.shops?.length ?? 0} shops, source=${data.source}`);
         lastFetchKey.current = key;
         setShops(data.shops || []);
         setError(null);
       } catch (err) {
         if (!cancelled) {
-          console.error("fetch-nearby-shops exception:", err);
-          setError("Could not load nearby shops");
+          console.error("[NearbyShops] Exception:", err);
+          setError(String(err));
         }
       } finally {
         if (!cancelled) setLoading(false);

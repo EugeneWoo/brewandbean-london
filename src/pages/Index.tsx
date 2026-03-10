@@ -43,6 +43,14 @@ const Index = () => {
       />
       <div className="flex-1 relative">
         <LocationBar locationState={locationState} />
+        {/* DEBUG PANEL — remove after diagnosis */}
+        <div className="absolute bottom-4 left-2 right-2 z-[2000] bg-black/80 text-white text-[10px] font-mono p-2 rounded-lg pointer-events-none leading-relaxed">
+          <div>status: {locationState.status}</div>
+          <div>loc: {locationState.location ? `${locationState.location.lat.toFixed(4)}, ${locationState.location.lng.toFixed(4)}` : "null"}</div>
+          <div>allShops: {allShops.length} | nearbyShops: {nearbyShops.length}</div>
+          <div>nearbyLoading: {String(nearbyLoading)}</div>
+          {locationState.error && <div>locErr: {locationState.error}</div>}
+        </div>
         {nearbyLoading && (
           <div className="absolute top-12 left-1/2 -translate-x-1/2 z-[1000] bg-background/90 backdrop-blur px-3 py-1.5 rounded-full text-xs text-muted-foreground shadow-sm border border-border">
             Loading nearby shops…
