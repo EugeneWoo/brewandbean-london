@@ -24,6 +24,9 @@ const EXCLUDED_NAMES = [
   "grubberie", "luis' cafe", "luis cafe",
   // Non-coffee-shop venues Google mis-tags
   "amnesty international", "kiosk",
+  // Health/wellness/food venues mis-tagged as coffee shops
+  "productive health", "sandwich", "persian", "health club", "wellness",
+  "pharmacy", "nutrition", "supplement",
 ];
 
 function gridKey(lat: number, lng: number): string {
