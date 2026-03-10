@@ -21,7 +21,7 @@ export function useNearbyShops(userLocation: UserLocation | null): UseNearbyShop
     if (!userLocation) return;
 
     // Grid key to avoid refetching for tiny movements (~500m). Includes radius so cache busts on radius change.
-    const key = `${(userLocation.lat * 200).toFixed(0)},${(userLocation.lng * 200).toFixed(0)},r2000`;
+    const key = `${(userLocation.lat * 200).toFixed(0)},${(userLocation.lng * 200).toFixed(0)},r3000`;
     if (key === lastFetchKey.current) return;
 
     console.log(`[NearbyShops] Fetching for key=${key} lat=${userLocation.lat} lng=${userLocation.lng}`);
@@ -41,7 +41,7 @@ export function useNearbyShops(userLocation: UserLocation | null): UseNearbyShop
               "apikey": SUPABASE_ANON_KEY,
               "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
             },
-            body: JSON.stringify({ lat: userLocation.lat, lng: userLocation.lng, radius: 2000 }),
+            body: JSON.stringify({ lat: userLocation.lat, lng: userLocation.lng, radius: 3000 }),
           }
         );
 
