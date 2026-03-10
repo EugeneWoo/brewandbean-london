@@ -20,9 +20,15 @@ const EXCLUDED_NAMES = [
   "starbucks", "pret a manger", "pret ", "greggs",
   "gail's", "gails", "blank street", "black sheep",
   "coffee republic", "wild bean cafe",
-  // Non-specialty breakfast/restaurant spots
+  // Non-specialty breakfast/restaurant/food spots
   "grubberie", "luis' cafe", "luis cafe", "coffee break",
   "diner", "breakfast", "lunch", "dinner",
+  "restaurant", "bistro", "brasserie", "eatery", "kitchen",
+  "full english", "fry up", "brunch bar",
+  "fish & chips", "fish and chips", "chippy",
+  "pizza", "burger", "kebab", "curry", "sushi", "noodle", "ramen",
+  "indian", "chinese", "thai", "mexican", "italian restaurant",
+  "canteen", "buffet", "bar & grill", "grill",
   // Non-coffee-shop venues Google mis-tags
   "amnesty international", "kiosk",
   // Health/wellness/food venues mis-tagged as coffee shops
