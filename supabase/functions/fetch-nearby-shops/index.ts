@@ -22,6 +22,7 @@ const EXCLUDED_NAMES = [
   "coffee republic", "wild bean cafe",
   // Non-specialty breakfast/restaurant spots
   "grubberie", "luis' cafe", "luis cafe", "coffee break",
+  "diner", "breakfast", "lunch", "dinner",
   // Non-coffee-shop venues Google mis-tags
   "amnesty international", "kiosk",
   // Health/wellness/food venues mis-tagged as coffee shops
