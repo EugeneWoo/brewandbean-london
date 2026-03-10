@@ -70,16 +70,8 @@ function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): nu
  */
 function MapLocationSnap({ center, shops }: { center: [number, number]; shops: CoffeeShop[] }) {
   const map = useMap();
-  const lastCenter = useRef<[number, number] | null>(null);
 
   useEffect(() => {
-    // Only snap if this is the first location or user moved >500m
-    if (lastCenter.current) {
-      const moved = haversineKm(lastCenter.current[0], lastCenter.current[1], center[0], center[1]);
-      if (moved < 0.5) return;
-    }
-    lastCenter.current = center;
-
     const closeShops = shops
       .filter((s) => haversineKm(center[0], center[1], s.lat, s.lng) <= 2)
       .slice(0, 8);
