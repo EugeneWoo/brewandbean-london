@@ -16,10 +16,12 @@ A React SPA for discovering independent specialty coffee shops in London, combin
 
 **Supabase Edge Function** (`supabase/functions/fetch-nearby-shops/`):
 - Deno/TypeScript function proxying Google Places Nearby Search API
-- In-memory grid-based cache (30-min TTL), filters to 4.5+ rated independent shops within 1500m
+- In-memory grid-based cache (30-min TTL, keyed by grid cell + radius), filters to 4.5+ rated shops within **3km**
+- Name-based exclusion list filters chains, restaurants, diners, food-first venues — only coffee-first indie shops pass
 - Photo proxy sub-route (`/photo`) served through the same function
 - JWT verification disabled (public access)
 - Env vars required: `GOOGLE_MAPS_API_KEY`, `SUPABASE_URL`
+- **Deployment:** Must be manually redeployed via Supabase Dashboard to pick up code changes (no CLI on free tier)
 
 **No database** — Supabase is used only for Edge Function hosting.
 
@@ -30,6 +32,14 @@ A React SPA for discovering independent specialty coffee shops in London, combin
 | Curated shops | `src/data/shops.ts` | 50+ hand-picked London shops with metadata |
 | Reddit reviews | `src/data/redditReviews.ts` | Pre-scraped quotes from r/Coffee, r/london, r/pourover, r/JamesHoffmann |
 | Live data | Edge Function → Google Places | Real-time nearby results merged with curated data |
+
+## Location & Map Behaviour
+- **Radius:** 3km for both Google Places API (`useNearbyShops`) and hardcoded shop filter (`useAllShops`)
+- **Merge logic** (`useAllShops`): hardcoded shops within 3km with rating ≥4.5 passing `isIndependentVerified` are always shown; Google Places results for names not already in hardcoded set are appended
+- **`isIndependentVerified`**: filters out known chains, bakery chains, and shops with >5 locations or rating <4.0. `hasFullInfo` is NOT a gate — all indie shops show regardless
+- **Map snap** (`MapLocationSnap` in `CoffeeMap`): fires on every location change (GPS, postcode, dropdown) — always snaps and fits bounds to nearby shops within 2km, no debounce
+- **Location sources:** GPS (`granted`), manual postcode lookup via postcodes.io, dropdown area presets. Session-cached for 10 min
+- **Fallback:** City of London if location denied
 
 ## Reddit × Google Maps Layering
 - `src/hooks/useNearbyShops.ts` calls the Edge Function for live Google Places results
