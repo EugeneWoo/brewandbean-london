@@ -67,6 +67,5 @@ export function isIndependentVerified(shop: CoffeeShop): boolean {
   if (isChain || isBakery) return false;
   if (shop.verification.totalLocations > 5) return false;
   if (shop.verification.googleRating < 4.0) return false;
-  if (!shop.verification.hasFullInfo) return false;
   return true;
 }
