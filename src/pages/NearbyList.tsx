@@ -73,7 +73,11 @@ const NearbyList = () => {
         matchCount={filteredShops.length}
         totalCount={allShops.length}
       />
-      <LocationBar locationState={locationState} />
+      <div className="relative">
+        <LocationBar locationState={locationState} />
+        {/* Spacer so content isn't hidden under the absolute LocationBar */}
+        <div className="h-12" />
+      </div>
 
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-lg mx-auto px-4 py-4 space-y-3">

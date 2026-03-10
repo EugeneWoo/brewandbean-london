@@ -44,7 +44,7 @@ const Index = () => {
       <div className="flex-1 relative">
         <LocationBar locationState={locationState} />
         {/* DEBUG PANEL — remove after diagnosis */}
-        <div className="absolute bottom-4 left-2 right-2 z-[2000] bg-black/80 text-white text-[10px] font-mono p-2 rounded-lg pointer-events-none leading-relaxed">
+        <div style={{position:"fixed",top:120,left:8,right:8,zIndex:9999,background:"rgba(0,0,0,0.85)",color:"white",fontSize:11,fontFamily:"monospace",padding:8,borderRadius:8,lineHeight:1.6}}>
           <div>status: {locationState.status}</div>
           <div>loc: {locationState.location ? `${locationState.location.lat.toFixed(4)}, ${locationState.location.lng.toFixed(4)}` : "null"}</div>
           <div>allShops: {allShops.length} | nearbyShops: {nearbyShops.length}</div>
