@@ -725,6 +725,26 @@ export const coffeeShops: CoffeeShop[] = [
     verification: { totalLocations: 1, googleRating: 4.4, hasFullInfo: true },
   },
 
+  // ── Teddington ────────────────────────────────────────────
+  {
+    id: "roan-records-teddington",
+    name: "Roan Records",
+    address: "12 Church Rd, Teddington TW11 8PB",
+    neighborhood: "Teddington",
+    lat: 51.42671, lng: -0.33643,
+    image: "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=600&h=400&fit=crop",
+    photos: ["https://images.unsplash.com/photo-1511920170033-f8396924c348?w=600&h=400&fit=crop"],
+    roaster: "Various specialty roasters", phone: "+44 7933 554767",
+    website: "https://www.roanrecords.co.uk", instagram: "@roanrecords",
+    isOpen: true,
+    hours: { Mon: "Closed", Tue: "8:00–16:00", Wed: "8:00–16:00", Thu: "8:00–16:00", Fri: "8:00–16:00", Sat: "9:00–17:00", Sun: "10:00–15:00" },
+    attributes: { kidsFriendly: true, laptopFriendly: false, sitIn: true, foodMenu: false, opensEarly: true, opensLate: false, specialtyCoffee: true, dogFriendly: true },
+    communityReview: "A one-of-a-kind Teddington spot combining specialty coffee with vinyl records. A neighbourhood gem with a loyal local following and a 4.9 rating — rare for any café, let alone one this tucked away.",
+    sentimentTags: ["Vinyl + coffee", "Neighbourhood gem", "4.9 rating", "Teddington favourite"],
+    nearestTransport: ["Teddington (5 min)", "Strawberry Hill (10 min)"],
+    verification: { totalLocations: 1, googleRating: 4.9, hasFullInfo: true },
+  },
+
   // ── Richmond ──────────────────────────────────────────────
   {
     id: "kiss-the-hippo-richmond",

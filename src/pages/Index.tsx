@@ -51,7 +51,7 @@ const Index = () => {
               <button onClick={() => setDebugOpen(false)} style={{float:"right",background:"none",border:"none",color:"white",cursor:"pointer",fontSize:13}}>✕</button>
               <div>status: {locationState.status}</div>
               <div>loc: {locationState.location ? `${locationState.location.lat.toFixed(4)}, ${locationState.location.lng.toFixed(4)}` : "null"}</div>
-              <div>allShops: {allShops.length} | nearbyShops: {nearbyShops.length}</div>
+              <div>allShops: {allShops.length} | nearbyShops: {nearbyShops.length} | hardcoded: {allShops.filter(s => !s.id.startsWith('gp-')).length}</div>
               <div>nearbyLoading: {String(nearbyLoading)}</div>
               <div style={{marginTop:4}}><b>API raw:</b> {nearbyShops.map(s => s.name).join(', ') || '—'}</div>
               <div style={{marginTop:4}}><b>final:</b> {allShops.map(s => s.name).join(', ') || '—'}</div>
