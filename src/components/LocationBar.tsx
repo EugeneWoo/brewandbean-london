@@ -193,25 +193,21 @@ export function LocationBar({ locationState }: LocationBarProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-56 max-h-[360px] overflow-y-auto">
-              {status !== "granted" && (
-                <>
-                  <DropdownMenuItem onClick={retry} className="gap-2">
-                    <Navigation className="h-3.5 w-3.5" />
-                    Use my location
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      setShowPostcodeInput(true);
-                      setTimeout(() => postcodeInputRef.current?.focus(), 50);
-                    }}
-                    className="gap-2"
-                  >
-                    <Search className="h-3.5 w-3.5" />
-                    Enter postcode
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                </>
-              )}
+              <DropdownMenuItem onClick={retry} className="gap-2">
+                <Navigation className="h-3.5 w-3.5" />
+                Use my location
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  setShowPostcodeInput(true);
+                  setTimeout(() => postcodeInputRef.current?.focus(), 50);
+                }}
+                className="gap-2"
+              >
+                <Search className="h-3.5 w-3.5" />
+                Enter postcode
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
               {visibleAreas.map((area) => (
                 <DropdownMenuItem
                   key={area.label}
