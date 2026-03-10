@@ -3,7 +3,6 @@ import { coffeeShops, isIndependentVerified } from "@/data/coffeeShops";
 import type { CoffeeShop } from "@/data/coffeeShops";
 import type { UserLocation } from "@/hooks/useUserLocation";
 
-const OVERLAP_THRESHOLD_KM = 0.05;
 
 function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
   const R = 6371;
@@ -57,28 +56,7 @@ export function useAllShops(
       merged = [...qualityHardcoded, ...newShops];
     }
 
-    // 3. Deduplicate visually overlapping shops — prefer hardcoded (richer data), then closest to user
-    const hardcodedIds = new Set(qualityHardcoded.map((s) => s.id));
-
-    const sorted = [...merged].sort((a, b) => {
-      const aHardcoded = hardcodedIds.has(a.id) ? 0 : 1;
-      const bHardcoded = hardcodedIds.has(b.id) ? 0 : 1;
-      if (aHardcoded !== bHardcoded) return aHardcoded - bHardcoded;
-      return (
-        haversineKm(userLat, userLng, a.lat, a.lng) -
-        haversineKm(userLat, userLng, b.lat, b.lng)
-      );
-    });
-
-    const kept: CoffeeShop[] = [];
-    for (const shop of sorted) {
-      const overlaps = kept.some(
-        (k) => haversineKm(k.lat, k.lng, shop.lat, shop.lng) < OVERLAP_THRESHOLD_KM
-      );
-      if (!overlaps) kept.push(shop);
-    }
-
-    console.log(`[AllShops] kept=${kept.length} names=${kept.map(s=>s.name).join(', ')}`);
-    return kept;
+    console.log(`[AllShops] merged=${merged.length} names=${merged.map(s=>s.name).join(', ')}`);
+    return merged;
   }, [nearbyShops, userLocation?.lat, userLocation?.lng, locationStatus]);
 }
