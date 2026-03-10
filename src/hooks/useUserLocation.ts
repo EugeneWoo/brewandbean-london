@@ -147,6 +147,12 @@ export function useUserLocation(): LocationState {
     if (!cached) {
       requestGeolocation();
     }
+    // Safety net: if still loading after 8s (e.g. geolocation blocked in iframe/preview),
+    // downgrade to "denied" so the City of London fallback kicks in
+    const timeout = setTimeout(() => {
+      setStatus((prev) => (prev === "loading" ? "denied" : prev));
+    }, 8000);
+    return () => clearTimeout(timeout);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const setManualLocation = useCallback((lat: number, lng: number) => {
