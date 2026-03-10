@@ -90,7 +90,7 @@ function MapLocationSnap({ center, shops }: { center: [number, number]; shops: C
     }
     const bounds = L.latLngBounds([center]);
     closeShops.forEach((s) => bounds.extend([s.lat, s.lng]));
-    map.fitBounds(bounds, { padding: [80, 80], minZoom: 13, maxZoom: 15, animate: true });
+    map.fitBounds(bounds, { padding: [80, 80], maxZoom: 15, animate: true });
   }, [center[0], center[1]]);
   return null;
 }
