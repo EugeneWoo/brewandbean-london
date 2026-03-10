@@ -57,13 +57,18 @@ export function useAllShops(
       merged = [...qualityHardcoded, ...newShops];
     }
 
-    // 3. Deduplicate visually overlapping shops — keep closest to user
+    // 3. Deduplicate visually overlapping shops — prefer hardcoded (richer data), then closest to user
+    const hardcodedIds = new Set(qualityHardcoded.map((s) => s.id));
 
-    const sorted = [...merged].sort(
-      (a, b) =>
+    const sorted = [...merged].sort((a, b) => {
+      const aHardcoded = hardcodedIds.has(a.id) ? 0 : 1;
+      const bHardcoded = hardcodedIds.has(b.id) ? 0 : 1;
+      if (aHardcoded !== bHardcoded) return aHardcoded - bHardcoded;
+      return (
         haversineKm(userLat, userLng, a.lat, a.lng) -
         haversineKm(userLat, userLng, b.lat, b.lng)
-    );
+      );
+    });
 
     const kept: CoffeeShop[] = [];
     for (const shop of sorted) {

@@ -53,7 +53,8 @@ const Index = () => {
               <div>loc: {locationState.location ? `${locationState.location.lat.toFixed(4)}, ${locationState.location.lng.toFixed(4)}` : "null"}</div>
               <div>allShops: {allShops.length} | nearbyShops: {nearbyShops.length}</div>
               <div>nearbyLoading: {String(nearbyLoading)}</div>
-              <div>shops: {allShops.map(s => s.name.substring(0,12)).join(', ')}</div>
+              <div style={{marginTop:4}}><b>API raw:</b> {nearbyShops.map(s => s.name).join(', ') || '—'}</div>
+              <div style={{marginTop:4}}><b>final:</b> {allShops.map(s => s.name).join(', ') || '—'}</div>
               {nearbyError && <div style={{color:'#f87'}}>nearbyErr: {nearbyError}</div>}
               {locationState.error && <div style={{color:'#f87'}}>locErr: {locationState.error}</div>}
             </div>
