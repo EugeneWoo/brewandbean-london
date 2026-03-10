@@ -41,7 +41,7 @@ export function useNearbyShops(userLocation: UserLocation | null): UseNearbyShop
               "apikey": SUPABASE_ANON_KEY,
               "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
             },
-            body: JSON.stringify({ lat: userLocation.lat, lng: userLocation.lng, radius: 1500 }),
+            body: JSON.stringify({ lat: userLocation.lat, lng: userLocation.lng, radius: 2000 }),
           }
         );
 

@@ -66,21 +66,31 @@ function MapRecenter({ userLocation }: { userLocation: UserLocation | null }) {
   return null;
 }
 
-/** Fit map to show user location + nearby shops */
+function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
+  const R = 6371;
+  const toRad = (d: number) => (d * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+/** Fit map to show user location + nearby shops within 2km */
 function MapAutoFit({ center, shops }: { center: [number, number]; shops: CoffeeShop[] }) {
   const map = useMap();
   useEffect(() => {
-    if (shops.length === 0) {
+    // Only fit to shops within 2km — prevents zooming out to show distant shops
+    const closeShops = shops
+      .filter((s) => haversineKm(center[0], center[1], s.lat, s.lng) <= 2)
+      .slice(0, 8);
+
+    if (closeShops.length === 0) {
       map.setView(center, 15, { animate: true });
       return;
     }
     const bounds = L.latLngBounds([center]);
-    const sorted = [...shops]
-      .map((s) => ({ s, d: Math.abs(s.lat - center[0]) + Math.abs(s.lng - center[1]) }))
-      .sort((a, b) => a.d - b.d)
-      .slice(0, 8);
-    sorted.forEach(({ s }) => bounds.extend([s.lat, s.lng]));
-    map.fitBounds(bounds, { padding: [80, 80], maxZoom: 15, animate: true });
+    closeShops.forEach((s) => bounds.extend([s.lat, s.lng]));
+    map.fitBounds(bounds, { padding: [80, 80], minZoom: 13, maxZoom: 15, animate: true });
   }, [center[0], center[1], shops.length]);
   return null;
 }
