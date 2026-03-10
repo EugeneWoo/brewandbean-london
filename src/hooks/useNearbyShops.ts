@@ -20,8 +20,8 @@ export function useNearbyShops(userLocation: UserLocation | null): UseNearbyShop
   useEffect(() => {
     if (!userLocation) return;
 
-    // Grid key to avoid refetching for tiny movements (~500m)
-    const key = `${(userLocation.lat * 200).toFixed(0)},${(userLocation.lng * 200).toFixed(0)}`;
+    // Grid key to avoid refetching for tiny movements (~500m). Includes radius so cache busts on radius change.
+    const key = `${(userLocation.lat * 200).toFixed(0)},${(userLocation.lng * 200).toFixed(0)},r2000`;
     if (key === lastFetchKey.current) return;
 
     console.log(`[NearbyShops] Fetching for key=${key} lat=${userLocation.lat} lng=${userLocation.lng}`);
