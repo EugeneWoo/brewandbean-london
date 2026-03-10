@@ -22,6 +22,7 @@ const EXCLUDED_NAMES = [
   "coffee republic", "wild bean cafe",
   // Non-specialty breakfast/restaurant/food spots
   "grubberie", "luis' cafe", "luis cafe", "coffee break",
+  "brother marcus",
   "diner", "breakfast", "lunch", "dinner",
   "restaurant", "bistro", "brasserie", "eatery", "kitchen",
   "full english", "fry up", "brunch bar",
@@ -53,8 +54,8 @@ function normalize(s: string): string {
 // IMPORTANT: avoid overly broad types like "store", "point_of_interest",
 // "establishment", "food" — Google applies these to almost every coffee shop.
 const NON_STANDALONE_TYPES = [
-  // Hospitality / nightlife
-  "bar", "night_club", "pub",
+  // Hospitality / nightlife / food
+  "bar", "night_club", "pub", "restaurant",
   // Retail (specific, not generic "store")
   "clothing_store", "shoe_store", "shopping_mall", "department_store",
   "furniture_store", "hardware_store", "electronics_store",
