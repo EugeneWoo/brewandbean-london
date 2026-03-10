@@ -35,12 +35,12 @@ export function useAllShops(
     const userLat = userLocation?.lat ?? CITY_OF_LONDON[0];
     const userLng = userLocation?.lng ?? CITY_OF_LONDON[1];
 
-    // 1. Quality-filter hardcoded shops and limit to within 10km of user
+    // 1. Quality-filter hardcoded shops within 3km (matching API radius)
     const qualityHardcoded = coffeeShops.filter(
       (s) =>
         isIndependentVerified(s) &&
         s.verification.googleRating >= 4.5 &&
-        haversineKm(userLat, userLng, s.lat, s.lng) <= 10
+        haversineKm(userLat, userLng, s.lat, s.lng) <= 3
     );
     console.log(`[AllShops] total=${coffeeShops.length} qualityHardcoded=${qualityHardcoded.length} nearbyShops=${nearbyShops.length} lat=${userLat.toFixed(4)} lng=${userLng.toFixed(4)}`);
 
