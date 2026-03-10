@@ -2,7 +2,7 @@ import { corsHeaders } from "../_shared/cors.ts";
 
 // Simple in-memory cache keyed by grid cell (~500m)
 const cache = new Map<string, { data: any[]; ts: number }>();
-const CACHE_TTL_MS = 30 * 60 * 1000; // 30 minutes
+const CACHE_TTL_MS = 0; // disabled — bust stale 2km cache
 
 // Names to filter out (case-insensitive partial match)
 const EXCLUDED_NAMES = [
