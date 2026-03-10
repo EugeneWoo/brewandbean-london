@@ -96,31 +96,41 @@ export function useUserLocation(): LocationState {
 
     setStatus("loading");
 
-    // Use watchPosition — must be called from user gesture on Safari
-    watchIdRef.current = navigator.geolocation.watchPosition(
-      (pos) => {
-        console.log("[Location] Update:", pos.coords.latitude, pos.coords.longitude, "accuracy:", pos.coords.accuracy);
-        const loc: UserLocation = {
-          lat: pos.coords.latitude,
-          lng: pos.coords.longitude,
-          source: "geolocation",
-        };
-        setLocation(loc);
-        setStatus("granted");
-        setCachedLocation(loc, "granted");
-        setError(null);
-      },
-      (err) => {
-        console.log("[Location] Error:", err.code, err.message);
-        setStatus("denied");
-        setError(
-          err.code === 1
-            ? "Location permission denied. Please enable Location Services in Safari Settings."
-            : "Could not determine location"
-        );
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
-    );
+    const onPosition = (pos: GeolocationPosition) => {
+      const loc: UserLocation = {
+        lat: pos.coords.latitude,
+        lng: pos.coords.longitude,
+        source: "geolocation",
+      };
+      setLocation(loc);
+      setStatus("granted");
+      setCachedLocation(loc, "granted");
+      setError(null);
+    };
+
+    const onError = (err: GeolocationPositionError) => {
+      console.log("[Location] Error:", err.code, err.message);
+      setStatus("denied");
+      setError(
+        err.code === 1
+          ? "Location permission denied. Please enable Location Services in Safari Settings."
+          : "Could not determine location"
+      );
+    };
+
+    // First: getCurrentPosition for a fast initial snap (uses network/wifi location, no GPS warm-up wait)
+    navigator.geolocation.getCurrentPosition(onPosition, onError, {
+      enableHighAccuracy: false,
+      timeout: 5000,
+      maximumAge: 300000, // accept up to 5min old cached position for instant snap
+    });
+
+    // Then: watchPosition for ongoing accurate updates
+    watchIdRef.current = navigator.geolocation.watchPosition(onPosition, onError, {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 60000,
+    });
   }, []);
 
   // Cleanup watch on unmount
