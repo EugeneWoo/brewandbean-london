@@ -172,7 +172,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    const key = gridKey(lat, lng);
+    const key = `${gridKey(lat, lng)},r${safeRadius}`;
     const cached = cache.get(key);
     if (cached && Date.now() - cached.ts < CACHE_TTL_MS) {
       return new Response(JSON.stringify({ shops: cached.data, source: "cache" }), {
