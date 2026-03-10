@@ -7,7 +7,7 @@ import { ShopPreviewCard } from "./ShopPreviewCard";
 import { redditReviewsByShop, redditSentimentByShop } from "@/data/redditReviews";
 import type { UserLocation } from "@/hooks/useUserLocation";
 
-const DEFAULT_CENTER: [number, number] = [51.515, -0.09];
+const CITY_OF_LONDON: [number, number] = [51.515, -0.09];
 
 function hasRedditBuzz(shopId: string): boolean {
   return !!(redditReviewsByShop[shopId]?.length || redditSentimentByShop[shopId]);
@@ -90,12 +90,15 @@ interface CoffeeMapProps {
   selectedShop: string | null;
   onSelectShop: (id: string | null) => void;
   userLocation: UserLocation | null;
+  locationStatus: "loading" | "granted" | "denied" | "manual";
 }
 
-export function CoffeeMap({ filteredShops, selectedShop, onSelectShop, userLocation }: CoffeeMapProps) {
+export function CoffeeMap({ filteredShops, selectedShop, onSelectShop, userLocation, locationStatus }: CoffeeMapProps) {
+  // While locating: stay wherever we are (no premature snap to wrong place)
+  // Denied with no location: fall back to City of London as last resort
   const center: [number, number] = userLocation
     ? [userLocation.lat, userLocation.lng]
-    : DEFAULT_CENTER;
+    : CITY_OF_LONDON;
 
   return (
     <MapContainer

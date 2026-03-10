@@ -32,7 +32,7 @@ const NearbyList = () => {
   const { shops: nearbyShops, loading: nearbyLoading } = useNearbyShops(locationState.location);
   const navigate = useNavigate();
 
-  const allShops = useAllShops(nearbyShops, locationState.location);
+  const allShops = useAllShops(nearbyShops, locationState.location, locationState.status);
 
   const filteredShops = useMemo(() => {
     if (activeFilters.length === 0) return allShops;
@@ -45,7 +45,7 @@ const NearbyList = () => {
   }, [activeFilters, allShops]);
 
   const rankedShops = useMemo(() => {
-    const userLat = locationState.location?.lat ?? 51.515;
+    const userLat = locationState.location?.lat ?? 51.515; // City of London last-resort fallback
     const userLng = locationState.location?.lng ?? -0.09;
 
     return [...filteredShops]

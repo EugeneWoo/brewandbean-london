@@ -21,14 +21,27 @@ function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): nu
  * Merges hardcoded curated shops with Google Places API results,
  * deduplicates by name and proximity, and filters for quality.
  */
+const CITY_OF_LONDON: [number, number] = [51.515, -0.09];
+
 export function useAllShops(
   nearbyShops: CoffeeShop[],
-  userLocation: UserLocation | null
+  userLocation: UserLocation | null,
+  locationStatus: "loading" | "granted" | "denied" | "manual"
 ): CoffeeShop[] {
   return useMemo(() => {
-    // 1. Quality-filter hardcoded shops
+    // While locating, show nothing — wait for real location
+    if (locationStatus === "loading") return [];
+
+    // Denied with no location: fall back to City of London as last resort
+    const userLat = userLocation?.lat ?? CITY_OF_LONDON[0];
+    const userLng = userLocation?.lng ?? CITY_OF_LONDON[1];
+
+    // 1. Quality-filter hardcoded shops and limit to within 10km of user
     const qualityHardcoded = coffeeShops.filter(
-      (s) => isIndependentVerified(s) && s.verification.googleRating >= 4.5
+      (s) =>
+        isIndependentVerified(s) &&
+        s.verification.googleRating >= 4.5 &&
+        haversineKm(userLat, userLng, s.lat, s.lng) <= 10
     );
 
     // 2. Merge with API shops (dedupe by name)
@@ -44,8 +57,6 @@ export function useAllShops(
     }
 
     // 3. Deduplicate visually overlapping shops — keep closest to user
-    const userLat = userLocation?.lat ?? 51.515;
-    const userLng = userLocation?.lng ?? -0.09;
 
     const sorted = [...merged].sort(
       (a, b) =>
@@ -62,5 +73,5 @@ export function useAllShops(
     }
 
     return kept;
-  }, [nearbyShops, userLocation]);
+  }, [nearbyShops, userLocation, locationStatus]);
 }

@@ -13,7 +13,7 @@ const Index = () => {
   const locationState = useUserLocation();
   const { shops: nearbyShops, loading: nearbyLoading } = useNearbyShops(locationState.location);
 
-  const allShops = useAllShops(nearbyShops, locationState.location);
+  const allShops = useAllShops(nearbyShops, locationState.location, locationState.status);
 
   const filteredShops = useMemo(() => {
     if (activeFilters.length === 0) return allShops;
@@ -53,6 +53,7 @@ const Index = () => {
           selectedShop={selectedShop}
           onSelectShop={setSelectedShop}
           userLocation={locationState.location}
+          locationStatus={locationState.status}
         />
       </div>
     </div>
