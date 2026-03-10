@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import type { CoffeeShop } from "@/data/coffeeShops";
 import type { UserLocation } from "@/hooks/useUserLocation";
+
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
 
 interface UseNearbyShopsResult {
   shops: CoffeeShop[];
@@ -27,19 +29,29 @@ export function useNearbyShops(userLocation: UserLocation | null): UseNearbyShop
 
     (async () => {
       try {
-        const { data, error: fnError } = await supabase.functions.invoke("fetch-nearby-shops", {
-          body: { lat: userLocation.lat, lng: userLocation.lng, radius: 1500 },
-        });
+        const res = await fetch(
+          `${SUPABASE_URL}/functions/v1/fetch-nearby-shops`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "apikey": SUPABASE_ANON_KEY,
+              "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+            },
+            body: JSON.stringify({ lat: userLocation.lat, lng: userLocation.lng, radius: 1500 }),
+          }
+        );
 
         if (cancelled) return;
 
-        if (fnError) {
-          console.error("fetch-nearby-shops error:", fnError);
+        if (!res.ok) {
+          console.error("fetch-nearby-shops HTTP error:", res.status);
           setError("Could not load nearby shops");
           setLoading(false);
           return;
         }
 
+        const data = await res.json();
         lastFetchKey.current = key;
         setShops(data.shops || []);
         setError(null);
