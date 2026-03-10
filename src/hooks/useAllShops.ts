@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { coffeeShops, isIndependentVerified } from "@/data/coffeeShops";
+import { coffeeShops } from "@/data/coffeeShops";
 import type { CoffeeShop } from "@/data/coffeeShops";
 import type { UserLocation } from "@/hooks/useUserLocation";
 
@@ -35,10 +35,9 @@ export function useAllShops(
     const userLat = userLocation?.lat ?? CITY_OF_LONDON[0];
     const userLng = userLocation?.lng ?? CITY_OF_LONDON[1];
 
-    // 1. Quality-filter hardcoded shops within 3km (matching API radius)
+    // 1. Filter hardcoded shops within 3km (matching API radius)
     const qualityHardcoded = coffeeShops.filter(
       (s) =>
-        isIndependentVerified(s) &&
         s.verification.googleRating >= 4.5 &&
         haversineKm(userLat, userLng, s.lat, s.lng) <= 3
     );
