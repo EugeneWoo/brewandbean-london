@@ -24,7 +24,7 @@ const EXCLUDED_NAMES = [
   "grubberie", "luis' cafe", "luis cafe", "coffee break",
   "brother marcus",
   "diner", "breakfast", "lunch", "dinner",
-  "restaurant", "bistro", "brasserie", "eatery", "kitchen",
+  "restaurant", "bistro", "brasserie", "eatery",
   "full english", "fry up", "brunch bar",
   "fish & chips", "fish and chips", "chippy",
   "pizza", "burger", "kebab", "curry", "sushi", "noodle", "ramen",
@@ -83,6 +83,20 @@ const NON_STANDALONE_TYPES = [
 function isLikelyCoffeeShop(name: string, types: string[] = []): boolean {
   const norm = normalize(name);
   if (EXCLUDED_NAMES.some((ex) => norm.includes(ex))) return false;
+
+  // Exclude "kitchen" only when combined with restaurant-type words
+  // (allows "Kitchen Coffee" but excludes "The Italian Kitchen", "Kitchen Restaurant", etc.)
+  if (norm.includes("kitchen")) {
+    const restaurantContextWords = [
+      "restaurant", "italian", "chinese", "thai", "indian", "mexican",
+      "bistro", "brasserie", "eatery", "supper", "table", "pantry",
+      "greenhouse", "factory", "works", "market", "exchange"
+    ];
+    if (restaurantContextWords.some((word) => norm.includes(word))) {
+      console.log(`Excluded "${name}" — kitchen with restaurant context`);
+      return false;
+    }
+  }
 
   // Exclude venues whose Google types indicate they're not standalone coffee shops
   const disqualifyingType = NON_STANDALONE_TYPES.find((t) => types.includes(t));
