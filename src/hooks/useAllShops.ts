@@ -43,6 +43,7 @@ export function useAllShops(
         s.verification.googleRating >= 4.5 &&
         haversineKm(userLat, userLng, s.lat, s.lng) <= 10
     );
+    console.log(`[AllShops] total=${coffeeShops.length} qualityHardcoded=${qualityHardcoded.length} nearbyShops=${nearbyShops.length} lat=${userLat.toFixed(4)} lng=${userLng.toFixed(4)}`);
 
     // 2. Merge with API shops (dedupe by name)
     let merged = qualityHardcoded;
@@ -72,6 +73,7 @@ export function useAllShops(
       if (!overlaps) kept.push(shop);
     }
 
+    console.log(`[AllShops] kept=${kept.length} names=${kept.map(s=>s.name).join(', ')}`);
     return kept;
-  }, [nearbyShops, userLocation, locationStatus]);
+  }, [nearbyShops, userLocation?.lat, userLocation?.lng, locationStatus]);
 }

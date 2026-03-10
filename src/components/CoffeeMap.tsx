@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap, CircleMarker, Pane } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -55,17 +55,6 @@ function createPinIcon(active: boolean, rating: number, hasBuzz: boolean) {
   });
 }
 
-/** Re-center map when user location changes (MapContainer center is immutable) */
-function MapRecenter({ userLocation }: { userLocation: UserLocation | null }) {
-  const map = useMap();
-  useEffect(() => {
-    if (userLocation) {
-      map.setView([userLocation.lat, userLocation.lng], Math.max(map.getZoom(), 14), { animate: true });
-    }
-  }, [userLocation?.lat, userLocation?.lng]);
-  return null;
-}
-
 function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
   const R = 6371;
   const toRad = (d: number) => (d * Math.PI) / 180;
@@ -75,11 +64,22 @@ function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): nu
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-/** Fit map to show user location + nearby shops within 2km */
-function MapAutoFit({ center, shops }: { center: [number, number]; shops: CoffeeShop[] }) {
+/**
+ * Snaps the map to user location once when it first arrives, then stays out of the way.
+ * Re-snaps only if the user's location changes significantly (>500m).
+ */
+function MapLocationSnap({ center, shops }: { center: [number, number]; shops: CoffeeShop[] }) {
   const map = useMap();
+  const lastCenter = useRef<[number, number] | null>(null);
+
   useEffect(() => {
-    // Only fit to shops within 2km — prevents zooming out to show distant shops
+    // Only snap if this is the first location or user moved >500m
+    if (lastCenter.current) {
+      const moved = haversineKm(lastCenter.current[0], lastCenter.current[1], center[0], center[1]);
+      if (moved < 0.5) return;
+    }
+    lastCenter.current = center;
+
     const closeShops = shops
       .filter((s) => haversineKm(center[0], center[1], s.lat, s.lng) <= 2)
       .slice(0, 8);
@@ -91,7 +91,7 @@ function MapAutoFit({ center, shops }: { center: [number, number]; shops: Coffee
     const bounds = L.latLngBounds([center]);
     closeShops.forEach((s) => bounds.extend([s.lat, s.lng]));
     map.fitBounds(bounds, { padding: [80, 80], minZoom: 13, maxZoom: 15, animate: true });
-  }, [center[0], center[1], shops.length]);
+  }, [center[0], center[1]]);
   return null;
 }
 
@@ -123,11 +123,8 @@ export function CoffeeMap({ filteredShops, selectedShop, onSelectShop, userLocat
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       />
 
-      {/* Re-center when location arrives (even late) */}
-      <MapRecenter userLocation={userLocation} />
-
-      {/* Auto-fit to show user + shops */}
-      {userLocation && <MapAutoFit center={[userLocation.lat, userLocation.lng]} shops={filteredShops} />}
+      {/* Snap to user location once on arrival, re-snap only on significant movement */}
+      {userLocation && <MapLocationSnap center={[userLocation.lat, userLocation.lng]} shops={filteredShops} />}
 
       {filteredShops.map((shop) => {
         const buzz = hasRedditBuzz(shop.id);
