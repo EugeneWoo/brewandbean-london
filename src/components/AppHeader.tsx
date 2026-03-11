@@ -15,7 +15,7 @@ export function AppHeader({ onSearchClick }: AppHeaderProps) {
         <Coffee className="h-5 w-5 text-primary" />
         <div className="flex flex-col">
           <span className="font-heading text-lg text-foreground leading-tight">Brew & Bean</span>
-          <span className="text-[10px] text-muted-foreground leading-tight">Hand-picked indie coffee shops across London</span>
+          <span className="text-xs text-muted-foreground leading-tight">Hand-picked indie coffee shops across London</span>
         </div>
       </Link>
 
