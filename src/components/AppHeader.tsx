@@ -14,8 +14,8 @@ export function AppHeader({ onSearchClick }: AppHeaderProps) {
       <Link to="/" className="flex items-center gap-2">
         <Coffee className="h-5 w-5 text-primary" />
         <div className="flex flex-col">
-          <span className="font-heading text-lg text-foreground leading-tight">Brew & Bean</span>
-          <span className="text-xs text-muted-foreground leading-tight">Hand-picked indie coffee shops across London</span>
+          <span className="font-heading text-xl text-foreground leading-tight">Brew & Bean</span>
+          <span className="text-sm text-muted-foreground leading-tight">Hand-picked indie coffee shops across London</span>
         </div>
       </Link>
 
