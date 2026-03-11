@@ -222,7 +222,7 @@ Deno.serve(async (req) => {
       headers: {
         "Content-Type": "application/json",
         "X-Goog-Api-Key": apiKey,
-        "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.location,places.rating,places.userRatingCount,places.photos,places.currentOpeningHours,places.priceLevel,places.types,places.dineIn,places.takeout,places.outdoorSeating,places.allowsDogs,places.goodForChildren,places.servesBreakfast,places.servesCoffee",
+        "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.location,places.rating,places.userRatingCount,places.photos,places.currentOpeningHours,places.priceLevel,places.types,places.dineIn,places.takeout,places.outdoorSeating,places.allowsDogs,places.goodForChildren,places.servesBreakfast,places.servesCoffee,places.nationalPhoneNumber,places.websiteUri",
       },
       body: JSON.stringify({
         includedTypes: ["coffee_shop"],
@@ -281,8 +281,8 @@ Deno.serve(async (req) => {
             (p: any) => makeProxyUrl(p.name)
           ),
           roaster: "",
-          phone: "",
-          website: "",
+          phone: place.nationalPhoneNumber || "",
+          website: place.websiteUri || "",
           instagram: "",
           isOpen: place.currentOpeningHours?.openNow ?? false,
           hours: {},
