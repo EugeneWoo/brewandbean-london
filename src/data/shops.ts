@@ -727,6 +727,23 @@ export const coffeeShops: CoffeeShop[] = [
 
   // ── Teddington ────────────────────────────────────────────
   {
+    id: "fallow-deer-teddington",
+    name: "The Fallow Deer",
+    address: "130 High St, Teddington TW11 8JB",
+    neighborhood: "Teddington",
+    lat: 51.42729, lng: -0.32789,
+    image: "https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=600&h=400&fit=crop",
+    photos: ["https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=600&h=400&fit=crop"],
+    roaster: "", phone: "", website: "", instagram: "",
+    isOpen: true,
+    hours: {},
+    attributes: { kidsFriendly: true, laptopFriendly: false, sitIn: true, foodMenu: true, opensEarly: false, opensLate: true, specialtyCoffee: false, dogFriendly: true },
+    communityReview: "A beloved Teddington pub on the High Street that also does decent coffee. Popular with locals for its relaxed atmosphere and outdoor seating.",
+    sentimentTags: ["Pub-café", "Dog friendly", "Outdoor seating", "Teddington local"],
+    nearestTransport: ["Teddington (5 min)", "Strawberry Hill (8 min)"],
+    verification: { totalLocations: 1, googleRating: 4.4, hasFullInfo: false },
+  },
+  {
     id: "roan-records-teddington",
     name: "Roan Records",
     address: "12 Church Rd, Teddington TW11 8PB",
