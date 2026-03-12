@@ -9,7 +9,7 @@ A location-based web app for discovering independent specialty coffee shops in L
 - **Shop Filters** — Open Now, Kids Friendly, Sit-in Space, Food Menu, Opens Early/Late, Dog Friendly
 - **Two Views** — Map view for exploration, list view ranked by distance + rating
 - **Shop Profiles** — Full details including hours, photos, transport links, and Reddit community reviews
-- **Curated + Live Data** — ~50 hand-picked independent London shops merged with real-time Google Places results, deduplicated and quality-filtered (4.5+ rating, independent only)
+- **Curated + Live Data** — ~50 hand-picked independent London shops always shown within 3km; real-time Google Places results (≥4.4 rating) appended for any shop not already in the curated set
 
 ## Tech Stack
 
@@ -76,7 +76,8 @@ supabase/
 
 ## Data Sources
 
-- **Local data files** — ~50 vetted independent London coffee shops hardcoded in `src/data/shops.ts` with attributes, hours, and photos
-- **Google Places API** — Real-time nearby results fetched via Supabase Edge Function, filtered for quality (4.5+ rating, non-chain), merged with local data at runtime
+- **Curated shops** (`src/data/shops.ts`) — ~50 hand-picked independent London coffee shops with full metadata (hours, photos, transport, Reddit reviews). Always shown within 3km if they pass independence checks, regardless of rating.
+- **Google Places API** — Real-time nearby results fetched via Supabase Edge Function. Filtered to ≥4.4 rating and coffee-first venues only (chains, pubs, restaurants excluded). Merged at runtime — only appended if the shop name isn't already in the curated set.
+- **Independence criteria** — A shop is shown from the curated set if: not a known chain (Costa, Starbucks, Caffe Nero, Gail's, Blank Street, Pret, Greggs, etc.), not a chain bakery (Ole & Steen, Paul), ≤5 locations, and Google rating ≥4.0. Venues excluded from the API feed by Google type (pubs, bars) must be added manually to `shops.ts`.
 - **Reddit reviews** — Pre-scraped community sentiment data in `src/data/redditReviews.ts`
 - **OpenStreetMap** — Map tiles (no API key required)

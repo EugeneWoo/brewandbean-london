@@ -16,8 +16,9 @@ A React SPA for discovering independent specialty coffee shops in London, combin
 
 **Supabase Edge Function** (`supabase/functions/fetch-nearby-shops/`):
 - Deno/TypeScript function proxying Google Places Nearby Search API
-- In-memory grid-based cache (30-min TTL, keyed by grid cell + radius), filters to 4.5+ rated shops within **3km**
-- Name-based exclusion list filters chains, restaurants, diners, food-first venues — only coffee-first indie shops pass
+- In-memory grid-based cache (30-min TTL, keyed by grid cell + radius), filters to **≥4.4 rating** within **3km**
+- Name-based exclusion list (`EXCLUDED_NAMES`) filters chains, restaurants, diners, food-first venues — only coffee-first indie shops pass
+- `NON_STANDALONE_TYPES` exclusion list drops venues Google tags as bar, pub, restaurant, hotel, etc. (this is why pub-cafés like The Fallow Deer never appear in the API feed and must be added as curated entries)
 - Photo proxy sub-route (`/photo`) served through the same function
 - JWT verification disabled (public access)
 - Env vars required: `GOOGLE_MAPS_API_KEY`, `SUPABASE_URL`
@@ -34,9 +35,17 @@ A React SPA for discovering independent specialty coffee shops in London, combin
 | Live data | Edge Function → Google Places | Real-time nearby results merged with curated data |
 
 ## Location & Map Behaviour
-- **Radius:** 3km for both Google Places API (`useNearbyShops`) and hardcoded shop filter (`useAllShops`)
-- **Merge logic** (`useAllShops`): hardcoded shops within 3km with rating ≥4.5 passing `isIndependentVerified` are always shown; Google Places results for names not already in hardcoded set are appended
-- **`isIndependentVerified`**: filters out known chains, bakery chains, and shops with >5 locations or rating <4.0. `hasFullInfo` is NOT a gate — all indie shops show regardless
+- **Radius:** 3km for both Google Places API (`useNearbyShops`) and curated shop filter (`useAllShops`)
+- **Merge logic** (`useAllShops`):
+  1. Curated shops (`shops.ts`) within 3km that pass `isIndependentVerified` are always included — **no rating gate** (hand-picked entries are trusted regardless of score)
+  2. Google Places API results (already filtered to ≥4.4 by the Edge Function) are appended for any name not already present in the curated set (case-insensitive dedup)
+  - Venues excluded from the API feed by type (pubs, bars, etc.) must be added manually to `shops.ts` to appear
+- **`isIndependentVerified`** (`src/data/coffeeShops.ts`): a shop passes if ALL of the following hold:
+  - Name does not match any entry in `EXCLUDED_CHAINS` (Costa, Starbucks, Caffe Nero, Gail's, Blank Street, Pret, Greggs, Coffee Republic, Wild Bean Cafe, Black Sheep)
+  - Name does not match any entry in `EXCLUDED_BAKERIES` (Ole & Steen, Paul, Cornish Bakehouse)
+  - `verification.totalLocations` ≤ 5
+  - `verification.googleRating` ≥ 4.0
+  - `hasFullInfo` is **not** a gate — all indie shops show regardless
 - **Map snap** (`MapLocationSnap` in `CoffeeMap`): fires on every location change (GPS, postcode, dropdown) — always snaps and fits bounds to nearby shops within 2km, no debounce
 - **Location sources:** GPS (`granted`), manual postcode lookup via postcodes.io, dropdown area presets. Session-cached for 10 min
 - **Fallback:** City of London if location denied
