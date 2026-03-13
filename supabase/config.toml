@@ -2,3 +2,6 @@ project_id = "bomixqudvcfqanqzekll"
 
 [functions.fetch-nearby-shops]
 verify_jwt = false
+
+[functions.suggest-shop]
+verify_jwt = false
