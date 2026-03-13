@@ -1,12 +1,13 @@
 import { Link, useLocation } from "react-router-dom";
-import { Search, Coffee, User, Map, List } from "lucide-react";
+import { Search, Coffee, User, Map, List, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface AppHeaderProps {
   onSearchClick?: () => void;
+  onSuggestClick?: () => void;
 }
 
-export function AppHeader({ onSearchClick }: AppHeaderProps) {
+export function AppHeader({ onSearchClick, onSuggestClick }: AppHeaderProps) {
   const { pathname } = useLocation();
 
   return (
@@ -46,6 +47,23 @@ export function AppHeader({ onSearchClick }: AppHeaderProps) {
       <div className="flex items-center gap-1">
         <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground" onClick={onSearchClick}>
           <Search className="h-5 w-5" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="hidden sm:flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground"
+          onClick={onSuggestClick}
+        >
+          <PlusCircle className="h-4 w-4" />
+          Suggest a shop
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="sm:hidden text-muted-foreground hover:text-foreground"
+          onClick={onSuggestClick}
+        >
+          <PlusCircle className="h-5 w-5" />
         </Button>
         <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
           <User className="h-5 w-5" />

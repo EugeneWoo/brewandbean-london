@@ -3,12 +3,14 @@ import { CoffeeMap } from "@/components/CoffeeMap";
 import { FilterBar } from "@/components/FilterBar";
 import { LocationBar } from "@/components/LocationBar";
 import { AppHeader } from "@/components/AppHeader";
+import { SuggestShopDialog } from "@/components/SuggestShopDialog";
 import { useUserLocation } from "@/hooks/useUserLocation";
 import { useNearbyShops } from "@/hooks/useNearbyShops";
 import { useAllShops } from "@/hooks/useAllShops";
 
 const Index = () => {
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
+  const [suggestOpen, setSuggestOpen] = useState(false);
   const [selectedShop, setSelectedShop] = useState<string | null>(null);
   const locationState = useUserLocation();
   const { shops: nearbyShops, loading: nearbyLoading, error: nearbyError } = useNearbyShops(locationState.location);
@@ -33,7 +35,7 @@ const Index = () => {
 
   return (
     <div className="flex flex-col h-screen">
-      <AppHeader />
+      <AppHeader onSuggestClick={() => setSuggestOpen(true)} />
       <FilterBar
         activeFilters={activeFilters}
         onToggleFilter={toggleFilter}
@@ -56,6 +58,7 @@ const Index = () => {
           locationStatus={locationState.status}
         />
       </div>
+      <SuggestShopDialog open={suggestOpen} onOpenChange={setSuggestOpen} />
     </div>
   );
 };
