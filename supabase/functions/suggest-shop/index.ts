@@ -22,7 +22,8 @@ Deno.serve(async (req) => {
     const isValidMapsUrl =
       mapsUrl.includes("maps.google.com") ||
       mapsUrl.includes("maps.app.goo.gl") ||
-      mapsUrl.includes("goo.gl/maps");
+      mapsUrl.includes("goo.gl/maps") ||
+      mapsUrl.includes("share.google");
 
     if (!isValidMapsUrl) {
       return new Response(JSON.stringify({ error: "mapsUrl must be a Google Maps URL" }), {
