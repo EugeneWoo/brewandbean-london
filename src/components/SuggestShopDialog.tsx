@@ -24,6 +24,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
 const schema = z.object({
+  requesterName: z.string().min(2, "At least 2 characters"),
+  requesterEmail: z.string().email("Must be a valid email"),
   shopName: z.string().min(2, "At least 2 characters"),
   mapsUrl: z
     .string()
@@ -51,7 +53,7 @@ export function SuggestShopDialog({ open, onOpenChange }: SuggestShopDialogProps
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { shopName: "", mapsUrl: "", reason: "" },
+    defaultValues: { requesterName: "", requesterEmail: "", shopName: "", mapsUrl: "", reason: "" },
   });
 
   const onSubmit = async (values: FormValues) => {
@@ -91,6 +93,34 @@ export function SuggestShopDialog({ open, onOpenChange }: SuggestShopDialogProps
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="requesterName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Your Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g. Jane Smith" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="requesterEmail"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Your Email</FormLabel>
+                  <FormControl>
+                    <Input type="email" placeholder="e.g. jane@example.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="shopName"

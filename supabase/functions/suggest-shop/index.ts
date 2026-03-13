@@ -10,10 +10,10 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { shopName, mapsUrl, reason } = await req.json();
+    const { requesterName, requesterEmail, shopName, mapsUrl, reason } = await req.json();
 
-    if (!shopName || !mapsUrl) {
-      return new Response(JSON.stringify({ error: "shopName and mapsUrl are required" }), {
+    if (!requesterName || !requesterEmail || !shopName || !mapsUrl) {
+      return new Response(JSON.stringify({ error: "requesterName, requesterEmail, shopName and mapsUrl are required" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -32,6 +32,8 @@ Deno.serve(async (req) => {
       });
     }
 
+    const safeRequesterName = sanitize(requesterName);
+    const safeRequesterEmail = sanitize(requesterEmail);
     const safeShopName = sanitize(shopName);
     const safeMapsUrl = sanitize(mapsUrl);
     const safeReason = reason ? sanitize(reason) : null;
@@ -53,6 +55,7 @@ Deno.serve(async (req) => {
         subject: `Coffee Shop Suggestion: ${safeShopName}`,
         html: `
           <h2>New Coffee Shop Suggestion</h2>
+          <p><strong>From:</strong> ${safeRequesterName} (${safeRequesterEmail})</p>
           <p><strong>Shop Name:</strong> ${safeShopName}</p>
           <p><strong>Google Maps URL:</strong> <a href="${safeMapsUrl}">${safeMapsUrl}</a></p>
           <p><strong>Reason:</strong> ${safeReason ?? "No reason provided"}</p>
