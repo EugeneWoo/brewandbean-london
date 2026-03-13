@@ -1,11 +1,9 @@
 import { Button } from "@/components/ui/button";
 import {
-  Users,
   Armchair,
   UtensilsCrossed,
   Sunrise,
   Moon,
-  Dog,
   X,
   Clock,
 } from "lucide-react";
@@ -18,12 +16,10 @@ export interface FilterOption {
 
 export const filterOptions: FilterOption[] = [
   { key: "openNow", label: "Open Now", icon: <Clock className="h-4 w-4" /> },
-  { key: "kidsFriendly", label: "Kids Friendly", icon: <Users className="h-4 w-4" /> },
   { key: "sitIn", label: "Sit-in Space", icon: <Armchair className="h-4 w-4" /> },
   { key: "foodMenu", label: "Food Menu", icon: <UtensilsCrossed className="h-4 w-4" /> },
   { key: "opensEarly", label: "Opens Early", icon: <Sunrise className="h-4 w-4" /> },
   { key: "opensLate", label: "Opens Late", icon: <Moon className="h-4 w-4" /> },
-  { key: "dogFriendly", label: "Dog Friendly", icon: <Dog className="h-4 w-4" /> },
 ];
 
 interface FilterBarProps {
