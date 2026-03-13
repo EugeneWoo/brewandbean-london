@@ -55,7 +55,9 @@ function normalize(s: string): string {
 // "establishment", "food" — Google applies these to almost every coffee shop.
 const NON_STANDALONE_TYPES = [
   // Hospitality / nightlife / food
-  "bar", "night_club", "pub", "restaurant",
+  // NOTE: "restaurant" intentionally excluded — handled separately below:
+  // a place tagged "restaurant" only fails if it lacks "cafe"/"coffee_shop" types
+  "bar", "night_club", "pub",
   // Retail (specific, not generic "store")
   "clothing_store", "shoe_store", "shopping_mall", "department_store",
   "furniture_store", "hardware_store", "electronics_store",
@@ -102,6 +104,13 @@ function isLikelyCoffeeShop(name: string, types: string[] = []): boolean {
   const disqualifyingType = NON_STANDALONE_TYPES.find((t) => types.includes(t));
   if (disqualifyingType) {
     console.log(`Excluded "${name}" — type: ${disqualifyingType}`);
+    return false;
+  }
+
+  // If Google tags a place as "restaurant" it must also carry "cafe" or "coffee_shop"
+  // to pass — this blocks delis/diners/greasy spoons while allowing food-forward cafés
+  if (types.includes("restaurant") && !types.includes("cafe") && !types.includes("coffee_shop")) {
+    console.log(`Excluded "${name}" — restaurant without cafe/coffee_shop type`);
     return false;
   }
 
