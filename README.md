@@ -5,7 +5,7 @@ A location-based web app for discovering independent specialty coffee shops in L
 ## Features
 
 - **Interactive Map** — Leaflet map with coffee shop markers, Reddit buzz indicators, and live user location
-- **Location Services** — Browser geolocation with live tracking, manual location fallback, and walking distance calculation (~1.2km radius)
+- **Location Services** — Browser geolocation with live tracking, manual location fallback. Shop data fetched within **3km**; map auto-fits to shops within **2km** on location arrival
 - **Shop Filters** — Open Now, Kids Friendly, Sit-in Space, Food Menu, Opens Early/Late, Dog Friendly
 - **Two Views** — Map view for exploration, list view ranked by distance + rating
 - **Shop Profiles** — Full details including hours, photos, transport links, and Reddit community reviews

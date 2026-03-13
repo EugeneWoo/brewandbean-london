@@ -35,7 +35,10 @@ A React SPA for discovering independent specialty coffee shops in London, combin
 | Live data | Edge Function → Google Places | Real-time nearby results merged with curated data |
 
 ## Location & Map Behaviour
-- **Radius:** 3km for both Google Places API (`useNearbyShops`) and curated shop filter (`useAllShops`)
+- **Distances — three distinct values:**
+  - **3km** — Google Places API search radius (`useNearbyShops` → Edge Function)
+  - **3km** — Curated shop filter radius (`useAllShops` `haversineKm <= 3`)
+  - **2km** — Map auto-fit bounds (`MapLocationSnap` in `CoffeeMap`) — visual only, does not affect which shops are fetched or shown
 - **Merge logic** (`useAllShops`):
   1. Curated shops (`shops.ts`) within 3km that pass `isIndependentVerified` are always included — **no rating gate** (hand-picked entries are trusted regardless of score)
   2. Google Places API results (already filtered to ≥4.4 by the Edge Function) are appended for any name not already present in the curated set (case-insensitive dedup)
