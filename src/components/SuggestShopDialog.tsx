@@ -32,7 +32,8 @@ const schema = z.object({
       (val) =>
         val.includes("maps.google.com") ||
         val.includes("maps.app.goo.gl") ||
-        val.includes("goo.gl/maps"),
+        val.includes("goo.gl/maps") ||
+        val.includes("share.google"),
       { message: "Must be a Google Maps URL" }
     ),
   reason: z.string().max(500, "Keep it under 500 characters").optional(),
